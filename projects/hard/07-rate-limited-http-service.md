@@ -35,6 +35,17 @@ Async HTTP, domain services, traits, shared state, rate-limiting algorithms, str
 
 Concurrent creation is collision-safe, rate-limit headers are correct, storage errors map predictably, logs contain no secrets, and in-flight requests finish during graceful shutdown.
 
+## System-design foundation
+
+Define the client identity and quota contract, bound concurrency and bodies, test saturation, and
+report p50/p95/p99 plus rejected load. Continue with
+[StreamGate](../../real-world-usage/05-networking/01-streamgate/README.md) and TenantPlane.
+
+### Foundation evidence
+
+- `F01` — Hold handlers slow and send oversized/bursty requests; assert body, queue, concurrency, and per-client quota bounds.
+- `F02` — Load from below to beyond saturation; report accepted/rejected rate, latency p50/p95/p99, memory, and graceful drain outcomes.
+
 ## Brown Rust Book prerequisites
 
 Study [public APIs](https://rust-book.cs.brown.edu/ch07-00-managing-growing-projects-with-packages-crates-and-modules.html), [traits](https://rust-book.cs.brown.edu/ch10-02-traits.html), [async programming](https://rust-book.cs.brown.edu/ch17-00-async-await.html), and [dynamic abstraction](https://rust-book.cs.brown.edu/ch18-02-trait-objects.html).

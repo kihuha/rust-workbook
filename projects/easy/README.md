@@ -1,6 +1,8 @@
 # Easy projects
 
-Each project should fit in a small Cargo package and combine at least three Rust concepts.
+Each project should fit in a small Cargo package and combine at least three Rust concepts. Treat
+this level as invariant training: model valid state, reject invalid transitions atomically, keep I/O
+at the boundary, and make time/order deterministic in tests.
 
 ## Projects and Brown Rust Book prerequisites
 
@@ -20,3 +22,14 @@ Each project should fit in a small Cargo package and combine at least three Rust
 ## Readiness check
 
 Start here after Chapter 11 so the numbered test cases in each brief are meaningful. Use each row to revisit only the additional book sections required by that project.
+
+## Where these foundations lead
+
+| Easy foundation | Continue with |
+| --- | --- |
+| Task list state and persistence | [Configuration merger](../medium/07-configuration-merger.md), then [TenantPlane](../../real-world-usage/02-cloud-infrastructure/07-tenantplane/README.md) |
+| Expense calculations | [Personal finance ledger](../medium/01-personal-finance-ledger.md), then [PayForge](../../real-world-usage/01-backend-development/02-payforge-stripe-clone/README.md) |
+| Text aggregation | [Parallel log analyzer](../medium/02-parallel-log-analyzer.md) and [SearchGrid](../../real-world-usage/13-search-observability/02-searchgrid/README.md) |
+| Inventory invariants | [Event booking engine](../medium/09-event-booking-engine.md), then [SwiftCart](../../real-world-usage/01-backend-development/01-swiftcart/README.md) |
+| Temperature/time-series summaries | [PulseStore](../../real-world-usage/08-databases/01-pulsestore/README.md), then [SignalWorks](../../real-world-usage/13-search-observability/01-signalworks/README.md) |
+| Safe filesystem planning | [Incremental backup](../hard/04-incremental-backup-tool.md) and storage-engine recovery |

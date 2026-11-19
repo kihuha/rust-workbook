@@ -672,6 +672,16 @@ The project is complete when:
 8. The benchmark and security reports explain deployment trade-offs without
    claiming the implementation is production-ready.
 
+## System-design practice
+
+Treat the required implementation/conformance work as Senior scope. Its benchmark must state CPU,
+memory, compiler profile, parameter set, concurrency, duration, and machine, and report p50/p95/p99
+plus memory pressure. Staff practice adds a versioned password-policy service, online parameter and
+PHC migration, bounded verification admission, compatibility, and rollback. Principal practice
+defines organization-wide parameter governance, hardware/cost strategy, credential-incident
+ownership, deprecation, and staged migration. The algorithm is fixed by the RFC; memory allocation,
+parallel scheduling, API policy, operational limits, and migration remain design decisions.
+
 ## Extensions
 
 - Implement Argon2i and Argon2d and run their RFC 9106 vectors.

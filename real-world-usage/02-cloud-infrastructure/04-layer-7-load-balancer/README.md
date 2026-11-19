@@ -104,6 +104,16 @@ Do not conclude that Layer 7 is simply better. The goal is to understand why Lay
 
 Traffic is visibly routed among the eight node log files, routes and algorithms are configurable, and a short comparison explains the behavioral boundary between the Layer 4 and Layer 7 implementations.
 
+## System-design practice
+
+Declare route mix, request/response sizes, keep-alive reuse, upstream latency, concurrency, and
+resource limits. Report added p50/p95/p99, goodput, memory, retry rate, and overload rejection.
+Senior implements bounded HTTP routing; Staff adds per-tenant quotas, adaptive concurrency, retry
+budgets, circuit breaking, canary reload, and old/new configuration compatibility; Principal adds
+regional routing, residency, capacity/cost strategy, policy ownership, and staged migration. Keep
+HTTP-library choice fixed for the lesson while treating admission, retry, health, and configuration
+semantics as open decisions. Use [Tower](https://docs.rs/tower/latest/tower/) as research context.
+
 ## Extensions
 
 Add cookie affinity, canary weights, circuit breaking, WebSockets, TLS termination, Prometheus metrics, Docker Compose, or benchmark both balancers under the same workload.

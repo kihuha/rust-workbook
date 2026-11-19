@@ -1,6 +1,10 @@
 # Rust projects
 
-These projects combine several Rust Book chapters in one practical build. Every project names the exact book sections to study before starting.
+These projects combine several Rust Book chapters in one practical build. Every project names the
+exact book sections to study before starting and identifies the system-design foundation it makes
+concrete. Chapters teach syntax and language concepts; projects integrate them behind boundaries;
+the [real-world challenges](../real-world-usage/README.md) later add ambiguity, scale, operations,
+failure, cost, and architectural evolution.
 
 ## Difficulty levels
 
@@ -48,8 +52,44 @@ These projects combine several Rust Book chapters in one practical build. Every 
 4. Add tests for the examples and failure cases in the brief.
 5. Finish the required behavior before attempting stretch goals.
 
+For system-design preparation, also write a one-page engineering note for every project:
+
+1. State the invariant that must never be violated.
+2. Draw the boundary between pure domain logic and I/O or concurrency.
+3. Name the resource that must remain bounded.
+4. Describe one failure and how state recovers.
+5. Measure one relevant behavior rather than saying it is “fast.”
+6. Link the result to the next project in the progression maps below.
+
+## Foundation progression
+
+| Foundation | Easy | Medium | Hard | Real-world culmination |
+| --- | --- | --- | --- | --- |
+| State and transactions | Shop inventory | Event booking engine | Event-sourced order system | SwiftCart and PayForge |
+| Durable storage | Task list | Personal finance ledger | Persistent KV / mini database | LogStore and ShardStore |
+| Bounded concurrency | File organizer | Parallel log analyzer / monitor | Scheduler / chat server | DurableQueue and EventLog |
+| Indexing and retrieval | Text statistics | Local note index | Mini relational database | SearchGrid and SignalWorks |
+| Configuration and evolution | Quiz modules | Configuration merger | Build graph runner | NimbusFleet and TenantPlane |
+| Networking and protocols | — | Website monitor | Chat / HTTP / file transfer | StreamGate, CollabPad, and RegionGate |
+
+The complete map and Senior-to-Principal progression live in the
+[system-design curriculum](../research/system-design-curriculum/README.md).
+
+## Evidence ladder
+
+- **Easy:** deterministic domain tests and safe local I/O.
+- **Medium:** explicit module/trait boundaries, persistence or concurrency, and partial failure.
+- **Hard:** protocol or storage contracts, bounded resources, crash recovery, and repeatable load.
+- **Real world:** capacity estimates, alternatives, fault injection, measured targets, security, cost,
+  migrations, runbooks, and design defense.
+
 ## Test-case convention
 
 Each project includes numbered unit and integration cases. Implement the normal path first, then boundaries, edge cases, corner cases, and failures. Preserve the `T01…` codes in test names or comments for traceability.
+
+`F01…` items are foundation evidence added for the system-design progression. They are not reflection
+questions: implement them as automated tests, deterministic fault experiments, or reproducible
+benchmark reports as stated. A project is not complete for progression purposes until its `F` items
+have evidence.
 
 Output wording may differ from the examples unless a format is explicitly required. The data and behavior should still match.

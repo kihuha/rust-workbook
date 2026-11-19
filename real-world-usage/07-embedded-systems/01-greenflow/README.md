@@ -99,6 +99,16 @@ Provide manufacturing test, calibration, device provisioning, key rotation, faul
 
 The controller passes hardware safety tests, remains deterministic under communication loss, recovers from interrupted writes and power loss, never exceeds valve limits, and can be diagnosed and rolled back in the field.
 
+## System-design practice
+
+Declare sensor/valve count, sample interval, telemetry size, battery/power budget, flash endurance,
+clock error, and failure frequency. Measure control-loop jitter, reaction p95/p99, memory, energy,
+storage wear, and recovery. Senior proves safe one-device control; Staff adds signed compatible OTA,
+offline buffering, fleet telemetry, staged rollout, and hardware-in-the-loop faults; Principal
+defines fleet/region ownership, safety case, supply chain, support lifetime, cost, and rollback.
+Use the [Rust Embedded Book](https://docs.rust-embedded.org/book/) and validate assumptions on the
+target hardware rather than extrapolating only from host tests.
+
 ## Optional extensions
 
 Add rainfall input, adaptive scheduling, encrypted telemetry, low-power sleep modes, or a bootloader-based over-the-air update system.

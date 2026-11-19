@@ -34,6 +34,17 @@ Async networking, binary or text protocols, file I/O, checksums, indexes, lockin
 
 Acknowledged writes survive restart, corrupt records are identified, compaction produces equivalent state, and concurrent tests never observe a partially applied record.
 
+## System-design foundation
+
+Document the exact acknowledgement/durability boundary, crash every write and compaction phase,
+and report write/read amplification. Continue with [LogStore](../../real-world-usage/08-databases/03-logstore/README.md)
+and then [ShardStore](../../real-world-usage/08-databases/04-shardstore/README.md).
+
+### Foundation evidence
+
+- `F01` — Crash at every append, sync, manifest, and compaction publication boundary and verify the documented acknowledgement contract.
+- `F02` — Benchmark read/write/scan workloads before and during compaction; report p50/p95/p99 plus read/write/space amplification.
+
 ## Brown Rust Book prerequisites
 
 Study [hash maps](https://rust-book.cs.brown.edu/ch08-03-hash-maps.html), [error handling](https://rust-book.cs.brown.edu/ch09-00-error-handling.html), [shared-state concurrency](https://rust-book.cs.brown.edu/ch16-03-shared-state.html), and [unsafe Rust](https://rust-book.cs.brown.edu/ch20-01-unsafe-rust.html) only if the design truly requires it.

@@ -34,6 +34,17 @@ Parsing, type systems, binary encoding, indexes, page or record storage, journal
 
 Type errors do not mutate storage, restart preserves data and indexes, incomplete writes recover consistently, and query tests cover valid plus invalid syntax.
 
+## System-design foundation
+
+Write schema and transaction guarantees explicitly, inject crashes around journal boundaries, and
+measure scans versus indexed lookups as data grows. Later services rely on understanding what their
+database does—and does not—make atomic.
+
+### Foundation evidence
+
+- `F01` — Crash at every journal/page publication boundary and compare recovered tables/indexes with a reference model.
+- `F02` — Benchmark scan and indexed lookup as rows grow by powers of ten; report p50/p95/p99, file size, and cache state.
+
 ## Brown Rust Book prerequisites
 
 Study [collections](https://rust-book.cs.brown.edu/ch08-00-common-collections.html), [error handling](https://rust-book.cs.brown.edu/ch09-00-error-handling.html), [generic abstractions](https://rust-book.cs.brown.edu/ch10-00-generics.html), [patterns](https://rust-book.cs.brown.edu/ch19-00-patterns.html), and [advanced types](https://rust-book.cs.brown.edu/ch20-03-advanced-types.html).

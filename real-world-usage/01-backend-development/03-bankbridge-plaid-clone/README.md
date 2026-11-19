@@ -156,6 +156,14 @@ Use a virtual clock or injectable time source so refresh, expiry, and backoff te
 - Require audited, time-limited support access; do not build a general-purpose “view user data” admin page.
 - Write a threat model covering token theft, cross-tenant access, OAuth mix-up, replay, malicious institutions, and compromised workers.
 
+## Fixed learning constraints and open decisions
+
+The stack below is fixed to practise a mixed ORM/explicit-SQL Rust service and unreliable outbound
+integration. The learner still decides connector boundaries, sync and cursor transactions,
+scheduling/fairness, raw-data retention, encryption/key rotation workflow, indexes, cache policy,
+process scaling, overload behavior, and migration/rollback. Use ADRs to compare viable alternatives;
+do not treat the suggested crate layout as proof of the correct system boundary.
+
 ## Required implementation stack
 
 | Concern | Required choice | How BankBridge uses it |
@@ -212,22 +220,49 @@ Emit redacted logs and traces with request, client, item, institution, sync-run,
 
 Provide runbooks for an institution outage, mass consent expiry, compromised client secret, connector schema change, stuck deletion, lost encryption-key access, sync divergence, database restore, and rollback. Expose an institution status page derived from measured connector health rather than manual optimism.
 
-## Service objectives
+## Local measurement and correctness targets
 
-- Core read API availability: `99.9%` monthly in the exercise environment, excluding a specific institution's outage from its connector SLO.
-- p95 cached account and transaction API latency: under `300 ms` at declared load.
+- p95 cached account and transaction API latency: under `300 ms` under the declared local workload and test environment.
 - Scheduled sandbox items refreshed within `15 minutes` p99 when the institution is healthy.
 - No cross-client disclosure and no plaintext sensitive token in logs, traces, or database columns.
 - Revoked consent blocks new collection within `60 seconds` and immediately blocks client reads.
 - No acknowledged sync cursor points past uncommitted transaction changes.
 
-## Deployment and deliverables
+These targets validate the simulator and implementation; they are not a monthly availability claim.
+If proposing a production objective, separate BankBridge behavior from institution dependency
+behavior and define the indicator, population, window, exclusions, and error-budget response.
 
-Provide non-root OCI images, versioned migrations, a local Compose environment, sandbox seed data, health/readiness endpoints, configuration reference, backup/restore procedures, encryption-key rotation procedure, dashboards, alerts, and rollback instructions. Include OpenAPI, connector authoring guide, data dictionary, consent/deletion policy, threat model, architecture decisions, and an incident-response checklist.
+## Local deployment and production design exercise
+
+Run non-root OCI images, migrations, sandbox institutions, keys, API, and workers in a local Compose
+environment. Demonstrate readiness, backup/restore, key rotation, connector/worker rollout and
+rollback. Include OpenAPI, connector guide, data dictionary, consent/deletion policy, threat model,
+ADRs, dashboards, alerts, and incident checklist.
+
+Regional or highly available production deployment remains a documented design exercise unless it
+is actually executed; distinguish measured behavior from proposed topology.
 
 ## Acceptance criteria
 
 The project is complete when a reviewer can link and reauthorize an item, observe realistic transaction mutations through cursor sync, survive rate limits and worker crashes, verify tenant isolation, revoke consent and complete deletion, rotate secrets and encryption keys, diagnose an institution outage from telemetry, restore a backup, and roll back a release using only the supplied documentation.
+
+## System-design progression
+
+The required build is the Senior milestone. Define a workload by client size, linked-item count,
+read/sync mix, page sizes, institution limits, webhook rate, and dataset age; measure API and sync
+p50/p95/p99, lag, `429` rate, worker saturation, deletion age, and cost per active item.
+
+For Staff practice, add fair scheduling across clients and institutions, connector retry budgets,
+schema-drift certification, old/new connector compatibility, a staged scheduler migration, and
+bulk recovery after a simulated institution-wide consent event.
+
+For Principal practice, define regional connector placement, consent/data-residency boundaries,
+RPO/RTO, provider concentration risk, client tiers, ownership, and a migration of active items
+between regions or aggregation providers with dual-read verification and rollback.
+
+Use the [OAuth security best current practice](https://www.rfc-editor.org/rfc/rfc9700),
+[OWASP API Security](https://owasp.org/API-Security/), and the
+[SRE books](https://sre.google/books/) as review references.
 
 ## Optional extensions
 

@@ -31,6 +31,17 @@ Domain types, enums for units, decimal calculations, maps, iterators, serializat
 
 Scaling is exact enough for documented units, incompatible units remain separate, missing recipes fail clearly, and saving a plan does not duplicate recipes.
 
+## System-design foundation
+
+Treat units as types, reject incompatible aggregation, and keep derived shopping lists reproducible
+from source recipes. This practices schema meaning, normalization, and safe aggregation before
+distributed analytics adds scale.
+
+### Foundation evidence
+
+- `F01` — Property-test unit conversion round trips within documented tolerances and reject incompatible dimensions.
+- `F02` — Rebuild the shopping list from source recipes after edits and compare it with the incrementally served result.
+
 ## Brown Rust Book prerequisites
 
 Study [structs](https://rust-book.cs.brown.edu/ch05-00-structs.html), [data-bearing enums](https://rust-book.cs.brown.edu/ch06-00-enums.html), [maps](https://rust-book.cs.brown.edu/ch08-03-hash-maps.html), [generic behavior](https://rust-book.cs.brown.edu/ch10-00-generics.html), and [iterator aggregation](https://rust-book.cs.brown.edu/ch13-02-iterators.html).

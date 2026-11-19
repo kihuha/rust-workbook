@@ -97,15 +97,28 @@ action: rotate the credential, remove it from history, then rescan
 - `T12` — Scan a representative large repository within CPU and memory budgets.
 - `T13` — Interrupt and resume a queued scan without duplicate findings.
 
-## Deployment target
+## Local deployment and production design exercise
 
-Distribute signed CLI binaries and a minimal non-root server image. Deploy the API and workers in isolated namespaces with encrypted storage, short-lived credentials, egress controls, queue limits, and audited rule publication.
+Build signed CLI artifacts and a minimal non-root server image. Run API and workers locally with
+separate identities, encrypted test storage, egress controls, queue limits, and audited rule
+publication; demonstrate backup, restore, key rotation, and rollback.
 
-Provide security advisories, dependency audit policy, incident response, tenant deletion, backup, restore, and key-rotation runbooks.
+Provide security advisories, dependency policy, incident response, and tenant-deletion runbooks.
+Production namespace and credential topology is a threat-model/design exercise unless executed.
 
 ## Acceptance criteria
 
 The platform blocks confirmed high-severity fixtures in CI, keeps raw secrets out of storage and logs, resists malicious inputs, produces actionable locations, and supports audited triage without cross-tenant leakage.
+
+## System-design practice
+
+Declare repository/file/archive distributions, rule count, tenant mix, match prevalence, and
+CPU/memory/I/O limits. Measure scan p95/p99, throughput, recall/precision, queue age, and saturation.
+Senior delivers safe local and central scanning; Staff adds tenant fairness, resumable distributed
+workers, signed rule compatibility, false-positive feedback, and staged rule rollout; Principal
+defines enterprise ownership, retention, regional policy, cost, incident authority, and migration.
+Use [OWASP threat modeling](https://owasp.org/www-community/Threat_Modeling) and
+[NIST SSDF](https://csrc.nist.gov/Projects/ssdf) to review—not replace—the adversarial tests.
 
 ## Optional extensions
 

@@ -233,6 +233,15 @@ Document supported kernels and architectures, upgrades, configuration compatibil
 
 The supervisor boots a fixture service graph, gates dependents on readiness, contains resource abuse, recovers from crashes, applies a valid reload, rejects an invalid reload, and produces an offline diagnostic bundle. It runs for 72 hours under restart, probe, disk, process, and daemon fault injection without zombies, unbounded restart loops, leaked descriptors, incorrect PID ownership, unbounded queues, or silent loss of diagnostic state.
 
+## System-design practice
+
+Declare child count, restart patterns, output rates, health intervals, configuration size, and OS
+resource limits. Measure spawn/restart p95/p99, detection delay, memory, descriptor use, and behavior
+in a crash loop. Senior proves safe supervision on one host; Staff adds dependency ordering,
+backoff budgets, compatible reload, cgroup/resource isolation, and upgrade handoff; Principal defines
+fleet control, ownership, security policy, cost, rollout, and rollback. Compare process-per-service
+with containers and system managers using the [systemd documentation](https://systemd.io/).
+
 ## Optional extensions
 
 Add seccomp profiles, watchdog hardware integration, socket activation, zero-downtime handoff, an immutable signed remote configuration bundle, or an A/B supervisor upgrade mechanism.

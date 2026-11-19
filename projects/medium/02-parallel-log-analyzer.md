@@ -38,6 +38,17 @@ Threads, channels, ownership transfer, worker coordination, maps, parsers, files
 
 Parallel output matches a single-threaded reference, every file is processed once, malformed lines are counted separately, and workers shut down cleanly.
 
+## System-design foundation
+
+Bound files and records in flight, preserve deterministic results independent of worker order, and
+measure throughput plus memory from one to saturation workers. Continue with
+[EventLog](../../real-world-usage/11-messaging-streaming/01-eventlog/README.md) or SignalWorks.
+
+### Foundation evidence
+
+- `F01` — Instrument files/records in flight and assert configured bounds while one worker is deliberately stalled.
+- `F02` — Benchmark 1, 2, 4, and 8 workers on the same corpus; report throughput, peak memory, and the saturation point.
+
 ## Brown Rust Book prerequisites
 
 Study [hash maps](https://rust-book.cs.brown.edu/ch08-03-hash-maps.html), [contextual errors](https://rust-book.cs.brown.edu/ch09-02-recoverable-errors-with-result.html), [iterator aggregation](https://rust-book.cs.brown.edu/ch13-02-iterators.html), and [threads and channels](https://rust-book.cs.brown.edu/ch16-00-concurrency.html).

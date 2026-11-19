@@ -33,6 +33,17 @@ Async/await, futures, semaphores, timeouts, serialization, configuration parsing
 
 Slow checks overlap, concurrency never exceeds the configured limit, one failure does not cancel other checks, and history rows are complete and parseable.
 
+## System-design foundation
+
+Use deadlines, bounded concurrency, jittered schedules, cancellation, and classified partial
+failures. Measure detection delay and resource use when endpoints become slow. Continue with
+[StreamGate](../../real-world-usage/05-networking/01-streamgate/README.md) and SignalWorks.
+
+### Foundation evidence
+
+- `F01` — Use local servers to inject delay, hang, reset, bad status, and cancellation; assert permits/tasks are released.
+- `F02` — Increase endpoint count past capacity and report detection p95/p99, memory, queueing, and rejection/degradation.
+
 ## Brown Rust Book prerequisites
 
 Study [recoverable errors](https://rust-book.cs.brown.edu/ch09-02-recoverable-errors-with-result.html), [automated tests](https://rust-book.cs.brown.edu/ch11-00-testing.html), and [futures, async concurrency, and tasks](https://rust-book.cs.brown.edu/ch17-00-async-await.html).

@@ -74,6 +74,14 @@ Content-Type: application/json
 }
 ```
 
+## Fixed learning constraints and open decisions
+
+The standard-library HTTP server and blocking PostgreSQL driver below are fixed learning constraints:
+they make framing, bounded threads, and blocking I/O visible before frameworks hide them. The
+learner must still decide transaction boundaries, reservation concurrency, idempotency storage,
+outbox scheduling, indexes, overload policy, and migration/rollback. Record at least two viable
+alternatives for each hard-to-reverse choice.
+
 ## Architecture expectations
 
 ### Required bare-bones stack
@@ -132,22 +140,42 @@ The goal is not to recreate a general-purpose web framework. The goal is to expe
 - `T15` — Slow or incomplete clients time out without exhausting the bounded worker pool.
 - `T16` — Graceful shutdown stops accepting connections, drains in-flight work to a deadline, and closes remaining sockets.
 
-## Deployment target
+## Local deployment and production design exercise
 
-Package the service as a non-root OCI image with a read-only filesystem. Deploy behind TLS to Kubernetes or an equivalent orchestrator with readiness checks, resource limits, horizontal scaling, secret injection, and rolling rollback.
+Package the service as a non-root OCI image with a read-only filesystem and run the complete exercise
+locally with Compose or equivalent. Demonstrate readiness, resource limits, migration, backup/
+restore, and rollback on that environment.
 
-Provide database migration, backup, restore, and rollback procedures. Include a development Compose setup and production configuration reference.
+Separately propose how TLS, horizontal scaling, secret injection, rolling deployment, and failure
+domains would work in production. Kubernetes or a cloud deployment is not required and does not
+count as evidence unless its behavior is actually measured.
 
-## Service-level objectives
+## Local exercise targets
 
-- Monthly availability: `99.9%` excluding approved maintenance.
-- Successful create-order p95 latency: below `250 ms` at the agreed load.
+- Successful create-order p95 latency: below `250 ms` under the declared local workload and test environment.
 - No acknowledged order or payment event may be lost.
-- Recovery point objective: under `5 minutes`; recovery time objective: under `30 minutes`.
+- In the scripted backup/restore exercise, demonstrate a recovery point under `5 minutes` and complete the documented restore within `30 minutes`; report the actual result rather than claiming a production RPO/RTO.
 
 ## Acceptance criteria
 
 The service is complete when a reviewer can deploy it from documentation, execute the end-to-end order lifecycle, observe it, rotate its secrets, recover persisted data, and roll back a faulty release.
+
+## System-design progression
+
+Treat the required scope above as the Senior milestone. Declare a workload with normal and flash-sale
+traffic, skewed SKUs, payload sizes, and database limits; then report throughput, p50/p95/p99,
+contention, pool saturation, and rejection behavior.
+
+For Staff practice, add expiring reservations, an injected clock, high-contention inventory,
+reconciliation for stuck order/payment/reservation states, and a choice between a local transaction,
+outbox, or saga across split services. Migrate one schema and event version while old workers run.
+
+For Principal practice, define regional inventory ownership, what may continue during region
+isolation, tenant/merchant tiers, RPO/RTO, capacity and cost assumptions, team boundaries, and a
+phased migration with shadow verification and rollback. Use the
+[PostgreSQL isolation documentation](https://www.postgresql.org/docs/current/transaction-iso.html),
+[SRE books](https://sre.google/books/), and the
+[curriculum rubric](../../../research/system-design-curriculum/evaluation-rubric.md) during review.
 
 ## Optional extensions
 

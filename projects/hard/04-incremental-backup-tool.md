@@ -35,6 +35,17 @@ Filesystem traversal, streaming hashes, content-addressed storage, serialization
 
 Two identical snapshots store no duplicate blobs, restore reproduces file contents, a failed snapshot never appears complete, and path traversal outside the destination is impossible.
 
+## System-design foundation
+
+Define snapshot atomicity, verify content rather than trusting metadata, and crash every publication
+boundary. Measure deduplication ratio, scan throughput, and restore time. These techniques recur in
+database snapshots, replica rebuilds, and regional migration.
+
+### Foundation evidence
+
+- `F01` — Inject failure before every blob/manifest publication and prove no incomplete snapshot is listable or restorable.
+- `F02` — Benchmark first, unchanged, and 10%-changed snapshots plus full restore; report throughput, bytes stored, deduplication, and verification time.
+
 ## Brown Rust Book prerequisites
 
 Study [ownership](https://rust-book.cs.brown.edu/ch04-00-understanding-ownership.html), [error propagation](https://rust-book.cs.brown.edu/ch09-02-recoverable-errors-with-result.html), [file I/O](https://rust-book.cs.brown.edu/ch12-02-reading-a-file.html), and [iterator processing](https://rust-book.cs.brown.edu/ch13-02-iterators.html).

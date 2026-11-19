@@ -99,22 +99,47 @@ GET api.streamgate.test/v1/videos/42
 - `T12` — Fuzz route configuration and HTTP boundary handling.
 - `T13` — Drain during load and verify no accepted request has an undefined outcome.
 
-## Deployment target
+## Local deployment and production design exercise
 
-Build a minimal non-root OCI image with a read-only filesystem and writable runtime directory. Deploy at least two replicas behind a network load balancer with disruption budgets and topology spread.
+Build a minimal non-root OCI image with a read-only filesystem and writable runtime directory. Run
+two local replicas and controllable upstreams; demonstrate load, drain, certificate/configuration
+rollout, fault injection, and rollback in that topology.
 
-Provide dashboards, alerts, certificate rotation, configuration rollout, canary, rollback, and incident runbooks. Pin and audit all network and TLS dependencies.
+Provide dashboards, alerts, canary and incident runbooks and audit network/TLS dependencies. Treat
+external load balancers, topology spread, and disruption budgets as a production design exercise
+unless they are part of an executed environment.
 
-## Service-level objectives
+## Local performance and safety targets
 
-- Availability: `99.99%` monthly.
-- Added proxy latency: below `10 ms` p99 inside the target region under normal load.
+- Added proxy latency: below `10 ms` p99 under the declared local workload, topology, and machine.
 - Configuration reload must not drop established connections.
 - No unbounded queues or buffers under adversarial slow traffic.
+
+These are reproducible exercise thresholds, not a monthly availability promise. A production service-objective
+design exercise must derive the indicator and objective from a concrete deployment and user journey,
+including downstream failures and the network path excluded by this local proxy measurement.
 
 ## Acceptance criteria
 
 The proxy routes, balances, times out, reloads, drains, and recovers under automated fault injection while maintaining documented resource and latency limits.
+
+## System-design progression
+
+The required proxy is the Senior milestone. Define request/response sizes, keep-alive reuse, route
+mix, upstream latency, slow clients, concurrency, and machine/network limits. Benchmark p50/p95/p99
+added latency, goodput, errors, queue time, memory, connections, and rejection beyond saturation.
+
+For Staff practice, add authenticated route policy, per-tenant quotas, adaptive concurrency, retry
+budgets, deadline propagation, circuit breaking, hot-tenant isolation, traffic shadowing, and a
+compatible configuration/API rollout across replicas.
+
+For Principal practice, define global/regional routing, failover and residency policy, edge versus
+regional placement, capacity reserve, cost per GiB/request, policy ownership, and a staged migration
+from the original proxy using shadow comparisons, canaries, and rollback thresholds.
+
+Use [Tower readiness and load-shedding documentation](https://docs.rs/tower/latest/tower/),
+[Google SRE cascading-failure guidance](https://sre.google/sre-book/addressing-cascading-failures/),
+and [OWASP API Security](https://owasp.org/API-Security/) during design review.
 
 ## Optional extensions
 

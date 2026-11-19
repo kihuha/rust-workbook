@@ -31,6 +31,17 @@ Structs, vectors or maps, enums for update fields, string normalization, borrowi
 
 Updates target IDs, ambiguous name searches return every match, and invalid changes leave both memory and saved data unchanged.
 
+## System-design foundation
+
+Give contacts stable IDs, distinguish uniqueness from display fields, and make rejected updates
+leave state unchanged. This introduces identity, indexing, and atomic mutation before persistence
+and concurrency make them harder.
+
+### Foundation evidence
+
+- `F01` — Attempt duplicate identity and invalid multi-field updates and prove the original contact is unchanged.
+- `F02` — Generate add/update/delete/search sequences and compare the indexed result with a simple reference model.
+
 ## Brown Rust Book prerequisites
 
 Study [borrowing](https://rust-book.cs.brown.edu/ch04-02-references-and-borrowing.html), [methods](https://rust-book.cs.brown.edu/ch05-03-method-syntax.html), [vectors and maps](https://rust-book.cs.brown.edu/ch08-00-common-collections.html), [error design](https://rust-book.cs.brown.edu/ch09-00-error-handling.html), and [automated tests](https://rust-book.cs.brown.edu/ch11-00-testing.html).

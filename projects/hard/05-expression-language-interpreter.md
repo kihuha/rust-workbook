@@ -36,6 +36,17 @@ Enums, recursive data, parsers, source spans, scoped environments, ownership, er
 
 Operator precedence is tested, shadowing follows documented rules, errors point to relevant source text, and the REPL continues after a recoverable error.
 
+## System-design foundation
+
+Treat the language as a versioned public contract: bound parse/evaluation work, preserve source
+diagnostics, and add compatibility fixtures before extending syntax. Policy engines and query
+languages need the same safety and evolution discipline.
+
+### Foundation evidence
+
+- `F01` — Fuzz/token-generate bounded programs and assert invalid input returns diagnostics without panic or unbounded recursion/work.
+- `F02` — Run old/new syntax fixtures through a version change and document accepted, migrated, and explicitly rejected forms.
+
 ## Brown Rust Book prerequisites
 
 Study [enums and matching](https://rust-book.cs.brown.edu/ch06-00-enums.html), [traits and lifetimes](https://rust-book.cs.brown.edu/ch10-00-generics.html), [boxed recursive types](https://rust-book.cs.brown.edu/ch15-01-box.html), and [patterns](https://rust-book.cs.brown.edu/ch19-00-patterns.html).

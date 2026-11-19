@@ -241,6 +241,16 @@ Authentication, real-time collaboration, hosted synchronization, notifications, 
 
 In a Git repository, a developer can initialize Iterator, create planning records and issues, edit Markdown source files, run a cycle and triage workflow, inspect a roadmap, and render saved views and insights. Another clone can reproduce the same state using only tracked files. Removing every generated cache changes no durable data, and corrupt records are reported with file paths and field-level errors rather than being silently skipped.
 
+## System-design practice
+
+Declare issue/project counts, change frequency, concurrent writers, query mix, attachment sizes,
+and local storage limits. Measure startup, mutation, search, rebuild, and sync p95/p99 as data grows.
+Senior delivers a correct local source of truth; Staff adds multi-user synchronization, conflict
+handling, migrations, audit, bounded background indexing, and offline recovery; Principal defines
+tenant isolation, data residency, ownership, compatibility policy, cost, and migration to a hosted
+service. Compare event log, relational state, and document files; keep the first implementation
+simple enough that each guarantee remains visible.
+
 ## Optional extensions
 
 Add a ratatui interface, comments, full-text indexing with Tantivy, Git-aware conflict helpers, import/export for Linear, editor plugins for highlighting-to-issue, or a small read-only web viewer. Any index or UI must continue to treat the Markdown, TOML, and immutable event files as the source of truth.

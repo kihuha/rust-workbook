@@ -57,7 +57,7 @@ endpoints:
 - Structured logging and basic metrics.
 - Backpressure with a semaphore.
 - Unix signals and graceful process lifecycle.
-- The difference between a probe result, health state, an alert, and an SLO.
+- The difference between a probe result, health state, an alert, a local test target, and a proposed production service objective.
 
 ## Failure experiments
 
@@ -75,6 +75,17 @@ Use local dummy servers to introduce delayed responses, `500` responses, refused
 ## Done when
 
 Run the daemon against at least three local endpoints, break and recover them independently, and use the logs to explain exactly when and why each health transition occurred.
+
+## System-design practice
+
+Declare endpoint count, interval distribution, timeout, response sizes, failure rate, DNS behavior,
+and CPU/memory/network limits. Measure detection delay, scheduling drift, probe p95/p99, queue depth,
+and saturation. Compare one task per endpoint with a bounded scheduler and fixed with adaptive probe
+intervals. The required build is Senior scope; Staff adds replicated probes, deduplicated alerts,
+tenant fairness, and compatible configuration reload; Principal adds regional vantage points,
+ownership, cost per million probes, derived service-objective proposals, migration, and rollback. Use
+[Google SRE monitoring guidance](https://sre.google/sre-book/monitoring-distributed-systems/) for
+context, then validate the policy with injected slow, flapping, and unreachable endpoints.
 
 ## Extensions
 

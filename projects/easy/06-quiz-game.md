@@ -31,6 +31,17 @@ Enums, structs, pattern matching, buffered input, parsing, collections, error ha
 
 Both question types use one quiz loop, malformed answer keys produce useful errors, and scoring logic is tested without terminal input.
 
+## System-design foundation
+
+Model question variants behind a stable interface and version the external question format. This
+is a small compatibility exercise: add a new variant without scattering conditionals or breaking
+older valid data.
+
+### Foundation evidence
+
+- `F01` — Add one question variant using only the public question/game boundary and run the shared behavior tests.
+- `F02` — Load old and new version fixtures; either migrate successfully or reject the unsupported version explicitly.
+
 ## Brown Rust Book prerequisites
 
 Study [enums and `match`](https://rust-book.cs.brown.edu/ch06-00-enums.html), [modules](https://rust-book.cs.brown.edu/ch07-00-managing-growing-projects-with-packages-crates-and-modules.html), [collections](https://rust-book.cs.brown.edu/ch08-00-common-collections.html), [`Result`](https://rust-book.cs.brown.edu/ch09-02-recoverable-errors-with-result.html), and [test organization](https://rust-book.cs.brown.edu/ch11-03-test-organization.html).

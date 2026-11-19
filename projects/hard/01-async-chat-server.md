@@ -34,6 +34,17 @@ Async networking, tasks, channels, shared state, serialization, protocol design,
 
 Several clients can join different rooms concurrently, malformed frames close or reject only their sender, slow clients follow a documented policy, and shutdown leaves no tasks hanging.
 
+## System-design foundation
+
+Measure fan-out latency and memory with fast and slow clients, make per-client queues bounded, and
+define reconnect/ordering behavior. This is the transport and backpressure prerequisite for
+[CollabPad](../../real-world-usage/12-real-time-collaboration/01-collabpad/README.md).
+
+### Foundation evidence
+
+- `F01` — Stall one client while others send; assert its queue follows policy and total memory remains bounded.
+- `F02` — Load 10, 100, and 1,000 local clients as hardware permits; report fan-out p50/p95/p99, memory, and disconnect cleanup.
+
 ## Brown Rust Book prerequisites
 
 Study [shared ownership](https://rust-book.cs.brown.edu/ch15-00-smart-pointers.html), [channels and shared state](https://rust-book.cs.brown.edu/ch16-00-concurrency.html), [async concurrency](https://rust-book.cs.brown.edu/ch17-00-async-await.html), and [trait objects](https://rust-book.cs.brown.edu/ch18-02-trait-objects.html).

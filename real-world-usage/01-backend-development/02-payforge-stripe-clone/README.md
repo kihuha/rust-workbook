@@ -152,6 +152,14 @@ Introduce configurable latency and duplicate callbacks. Keep this simulator behi
 - Record audit events for credential changes, endpoint changes, refunds, and manual redelivery.
 - Publish a threat model and state clearly what remains outside PCI DSS scope in the educational build.
 
+## Fixed learning constraints and open decisions
+
+The stack below is fixed so the exercise tests Rust backend integration rather than framework
+selection. It does not prescribe the architecture. The learner must compare and decide transaction
+and lock boundaries, payment/ledger ownership, worker claim strategy, outbox publication, webhook
+admission, cache use, indexes, process scaling, overload policy, and migration/rollback. Record ADRs
+for hard-to-reverse decisions and state why a simpler alternative is insufficient.
+
 ## Required implementation stack
 
 | Concern | Required choice | How PayForge uses it |
@@ -210,22 +218,48 @@ Emit structured logs and traces with request, merchant, intent, event, and deliv
 
 Provide runbooks for stuck processing payments, processor degradation, webhook backlog, leaked API keys, ledger invariant failure, database restore, and safe worker rollback. Add readiness checks that distinguish API availability from worker health.
 
-## Service objectives
+## Local measurement and correctness targets
 
-- Payment creation and retrieval availability: `99.95%` monthly in the exercise environment.
-- p95 create/retrieve latency: under `250 ms` at the declared load, excluding processor confirmation time.
+- p95 create/retrieve latency: under `250 ms` under the declared local workload and test environment, excluding processor confirmation time.
 - No duplicate capture caused by PayForge for a single stable operation ID.
 - No loss of acknowledged mutations or committed ledger entries.
 - Webhook event created within `5 seconds` p99 of a completed payment transition.
 - Reconciliation resolves simulated ambiguous outcomes within `2 minutes` p99.
 
-## Deployment and deliverables
+These are experiment acceptance thresholds, not a production availability promise. A Staff/Principal
+review may propose an SLI and hypothetical objective, but must state the users, measurement window,
+dependencies, error-budget policy, and why local tests cannot validate monthly availability.
 
-Provide non-root OCI images, versioned migrations, local Compose dependencies, production-style configuration, health endpoints, seed scripts, backup/restore steps, and a zero-downtime rollout plan. Include an OpenAPI document, architecture decision records, threat model, data-retention policy, dashboards, alerts, and operator runbooks.
+## Local deployment and production design exercise
+
+Run non-root OCI images, versioned migrations, dependencies, processor and webhook simulators in a
+local Compose environment. Demonstrate health checks, seed/reset, backup/restore, worker rollout and
+rollback there. Include OpenAPI, ADRs, threat model, retention policy, dashboards, and runbooks.
+
+A multi-zone or zero-downtime production topology is a design and migration exercise unless the
+learner has a real test environment; label unexecuted steps and assumptions instead of claiming them.
 
 ## Acceptance criteria
 
 The project is complete when a reviewer can provision a merchant, run every simulator outcome, prove retry safety, inspect balanced financial entries, receive and verify webhooks, rebuild balances, recover from a killed worker, rotate secrets, restore a backup, and roll back a release using only the supplied documentation.
+
+## System-design progression
+
+The required build is the Senior milestone. Its load test must define merchant sizes, create/read/
+confirm/refund mix, processor latency, webhook fan-out, dataset size, concurrency, and test
+environment; report p50/p95/p99, ambiguity, reconciliation lag, saturation, and rejected load.
+
+For Staff practice, enforce weighted merchant fairness, dependency retry budgets, provider-specific
+bulkheads, schema/event compatibility, a staged settlement-worker replacement, and cost per payment
+plus webhook. Demonstrate a noisy merchant cannot starve smaller merchants.
+
+For Principal practice, propose data-residency and regional-failure boundaries, RPO/RTO, settlement
+and ledger authority, cross-team ownership, incident authority, and a multi-phase migration from
+single-region processing. Shadow and reconcile the new path before cutover; define rollback and the
+financial evidence required to resume.
+
+Research transaction behavior in the [PostgreSQL documentation](https://www.postgresql.org/docs/current/transaction-iso.html)
+and operational strategy in the [Google SRE books](https://sre.google/books/).
 
 ## Optional extensions
 

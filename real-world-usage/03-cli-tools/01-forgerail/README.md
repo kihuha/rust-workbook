@@ -95,6 +95,16 @@ Provide a threat model covering malicious repository content, command injection,
 
 An engineer can clone a fixture repository, generate and review a plan, execute it in dry-run, apply it, interrupt it, resume safely, and inspect machine-readable results without manual state repair.
 
+## System-design practice
+
+Declare repository/package counts, dependency density, artifact sizes, failure rates, parallelism,
+and CI resource limits. Measure planning time, critical path, cache hit rate, worker utilization,
+memory, and recovery after interruption. Senior delivers a reproducible local release; Staff adds
+remote workers, signed provenance, bounded retries, compatibility across tool versions, and a
+staged pipeline migration; Principal defines organizational ownership, policy exceptions, supply-
+chain risk, cost per release, and rollback. Compare central orchestration with delegated package
+workflows using [SLSA](https://slsa.dev/) and the [Cargo Book](https://doc.rust-lang.org/cargo/).
+
 ## Optional extensions
 
 Add signed approvals, remote build workers, registry adapters, release pull requests, or software-bill-of-materials generation.

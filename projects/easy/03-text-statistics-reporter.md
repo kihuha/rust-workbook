@@ -39,6 +39,17 @@ Strings and slices, iterators, `HashMap`, sorting, file I/O, ownership, error pr
 
 Empty files work, output ordering is stable, and tokenization behavior is documented with tests for punctuation and mixed case.
 
+## System-design foundation
+
+Separate streaming ingestion, aggregation, and deterministic presentation. Record memory growth as
+input grows and identify which statistics require retaining full input. These are the same choices
+made by log, search, and metrics pipelines.
+
+### Foundation evidence
+
+- `F01` — Feed input through a reader that returns very small chunks and prove results match whole-file input.
+- `F02` — Record peak memory and elapsed time for 1 MiB, 10 MiB, and 100 MiB generated inputs and explain the growth.
+
 ## Brown Rust Book prerequisites
 
 Study [slices](https://rust-book.cs.brown.edu/ch04-04-slices.html), [UTF-8 strings](https://rust-book.cs.brown.edu/ch08-02-strings.html), [hash maps](https://rust-book.cs.brown.edu/ch08-03-hash-maps.html), [file errors](https://rust-book.cs.brown.edu/ch09-02-recoverable-errors-with-result.html), and [iterator processing](https://rust-book.cs.brown.edu/ch13-02-iterators.html).

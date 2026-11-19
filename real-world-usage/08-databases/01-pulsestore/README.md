@@ -110,7 +110,7 @@ Version every on-disk structure. Support read-before-upgrade compatibility check
 
 Ship as a Rust library and non-root sidecar image. Define filesystem durability assumptions and test on each supported filesystem and architecture.
 
-## Service-level objectives
+## Durability and compatibility targets
 
 - No loss of acknowledged writes under the documented fsync mode.
 - Recovery of a target-size database within the agreed startup window.
@@ -120,6 +120,22 @@ Ship as a Rust library and non-root sidecar image. Define filesystem durability 
 ## Acceptance criteria
 
 PulseStore is complete when crash injection, snapshot restore, compaction equivalence, concurrent reads, retention, and sustained-load tests pass against a versioned storage format.
+
+## System-design progression
+
+The required engine is the Senior milestone. Replace unspecified targets with a declared dataset,
+series/cardinality distribution, point batch size, query range/selectivity, cache state, sync mode,
+storage medium, compiler profile, and CPU/memory/disk limit. Measure amplification and saturation in
+addition to throughput and latency.
+
+For Staff practice, add online format migration, bounded rollups, cardinality admission, sustained
+compaction debt, and a compatibility rollout with old readers. Keep distributed ingestion and
+alerting in [SignalWorks](../../13-search-observability/01-signalworks/README.md) so this project
+continues to expose storage-engine mechanics.
+
+For Principal review, compare operational and cost consequences of embedded, replicated, and
+object-storage-backed designs and propose a verified migration without claiming local benchmarks
+prove production scale. Consult the [Prometheus storage documentation](https://prometheus.io/docs/prometheus/latest/storage/).
 
 ## Optional extensions
 

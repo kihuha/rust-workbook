@@ -80,6 +80,16 @@ Then keep a connection open, stop a node, skew node weights, and make requests f
 
 All eight nodes can run locally, `curl` traffic is visibly distributed among their log files, algorithms can be changed through configuration, and you can explain what the balancer knows—and cannot know—at Layer 4.
 
+## System-design practice
+
+Define connection rate, concurrent connections, byte distribution, keep-alive duration, backend
+latency, slow clients, and host/network limits. Measure accept/connect p95/p99, goodput, errors,
+active connections, memory, and rejection past saturation. Compare balancing algorithms and active
+versus passive health without adding HTTP policy. Senior proves bounded TCP forwarding; Staff adds
+replicas, connection draining, hot-backend protection, compatible reload, and failure budgets;
+Principal adds regional placement, capacity reserve, cost/GiB, ownership, migration, and rollback.
+Review [Google SRE cascading failures](https://sre.google/sre-book/addressing-cascading-failures/).
+
 ## Extensions
 
 Add consistent hashing, PROXY protocol, TLS passthrough, per-backend connection limits, Docker Compose, latency metrics, or a small traffic generator.

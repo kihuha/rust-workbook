@@ -153,6 +153,20 @@ Treat database files as untrusted input. Bounds-check all lengths, counts, block
 
 LogStore is complete when model-based tests, crash injection, snapshot-safe compaction, tombstone tests, compatibility checks, and documented benchmarks pass against a versioned format, and when the cross-project report explains at least two measured consequences of choosing an LSM design.
 
+## System-design progression
+
+Treat the required engine as the Senior milestone. In addition to existing benchmark disclosure,
+record p50/p95/p99 across increasing load until write stalls, compaction debt, cache pressure, or
+storage bandwidth becomes dominant.
+
+For Staff practice, migrate compaction policy and on-disk format with old readers, expose a
+snapshot-plus-change transfer boundary, and test disk-full, slow storage, checksum failure, and
+unbounded tombstone/hot-key workloads. Compare against BranchStore with identical inputs.
+
+For Principal review, design its use inside [ShardStore](../04-shardstore/README.md): identify which
+durability and compatibility guarantees belong locally versus to replication, estimate storage and
+operational cost, and plan a rolling migration without simultaneous compaction/rebuild overload.
+
 ## Optional extensions
 
 Add compressed blocks, prefix-compressed keys, snapshots, group commit, a block cache, multiple compaction strategies, rate-limited compaction, value-log separation, or blob files for large values.

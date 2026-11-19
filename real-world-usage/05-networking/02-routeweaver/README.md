@@ -167,6 +167,16 @@ two CLI-supplied nodes. Manually failing a node or increasing a link latency in
 the file causes the next invocation to choose the correct alternate path. The
 routing algorithm, parser, and failure cases are covered by automated tests.
 
+## System-design practice
+
+Declare node/link count, update rate, latency distribution, churn, message loss, and CPU/memory
+limits. Measure convergence p95/p99, route-computation time, message volume, stale-route duration,
+and saturation. Senior simulates correct shortest paths; Staff implements a bounded link-state
+protocol with sequence numbers, flooding, failure detection, and rolling compatibility; Principal
+defines areas/hierarchy, policy ownership, incident behavior, capacity, cost, and migration. Use
+[RFC 2328](https://www.rfc-editor.org/rfc/rfc2328) as protocol research while keeping the project a
+small educational model rather than an OSPF clone.
+
 ## Extensions
 
 - Support directed links or different latency in each direction.

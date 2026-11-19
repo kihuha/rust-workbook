@@ -36,6 +36,17 @@ Modules, enums, ownership, collections, iterators, custom errors, file replaceme
 
 Every accepted transaction preserves total money except deposits and withdrawals, failed operations append nothing, and saved data survives a round trip.
 
+## System-design foundation
+
+Make transactions immutable, corrections explicit, balances rebuildable, and repository behavior
+replaceable. Add reconciliation that recomputes every balance from source entries. This is the
+accounting foundation for [PayForge](../../real-world-usage/01-backend-development/02-payforge-stripe-clone/README.md).
+
+### Foundation evidence
+
+- `F01` — Generate valid/invalid postings and prove entries balance while rejected postings append nothing.
+- `F02` — Rebuild balances from immutable entries after restart and compare every account/report exactly.
+
 ## Brown Rust Book prerequisites
 
 Study [public APIs](https://rust-book.cs.brown.edu/ch07-00-managing-growing-projects-with-packages-crates-and-modules.html), [error handling](https://rust-book.cs.brown.edu/ch09-00-error-handling.html), [traits](https://rust-book.cs.brown.edu/ch10-02-traits.html), [tests](https://rust-book.cs.brown.edu/ch11-00-testing.html), and [iterators](https://rust-book.cs.brown.edu/ch13-02-iterators.html).

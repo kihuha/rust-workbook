@@ -29,6 +29,17 @@ Filesystem metadata, maps and sets, text parsing, serialization, incremental upd
 
 Deleted notes disappear from the index, unchanged notes are not reprocessed, result order is deterministic, and corrupt index data triggers a safe rebuild.
 
+## System-design foundation
+
+Separate authoritative documents from rebuildable index segments, version the analyzer, and publish
+a rebuilt generation atomically. Measure indexing and query latency as the corpus grows. Continue
+with [SearchGrid](../../real-world-usage/13-search-observability/02-searchgrid/README.md).
+
+### Foundation evidence
+
+- `F01` — Crash/fail before and after generation publication; startup exposes either the old or new complete index, never a mixture.
+- `F02` — Benchmark index and representative queries at 1,000, 10,000, and 100,000 generated notes; report latency, memory, and index bytes.
+
 ## Brown Rust Book prerequisites
 
 Study [strings, maps, and sets](https://rust-book.cs.brown.edu/ch08-00-common-collections.html), [error recovery](https://rust-book.cs.brown.edu/ch09-00-error-handling.html), [reading files](https://rust-book.cs.brown.edu/ch12-02-reading-a-file.html), and [iterators](https://rust-book.cs.brown.edu/ch13-02-iterators.html).

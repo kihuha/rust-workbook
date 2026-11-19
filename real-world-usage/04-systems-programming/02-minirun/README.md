@@ -194,6 +194,16 @@ Keep raw syscalls and any `unsafe` blocks inside small Linux adapter modules wit
 
 A developer can unpack a minimal rootfs, run a shell with a private hostname, mount tree, PID tree, network namespace, and cgroup limits, then inspect, signal, and delete it. The host remains unchanged outside explicitly owned runtime resources. Forced failure at any creation stage is recoverable and leaves no orphaned processes or kernel resources.
 
+## System-design practice
+
+Declare image/rootfs size, process and filesystem workloads, startup concurrency, network traffic,
+and host kernel/resource limits. Measure create/start/stop p95/p99, memory, CPU, I/O, cleanup, and
+behavior at exhaustion. Senior implements one-host isolation; Staff adds image/content addressing,
+resource accounting, compatible bundle/runtime versions, recovery, and safe upgrade; Principal
+defines fleet integration, multi-tenant threat boundaries, supply-chain policy, ownership, cost, and
+migration. Compare the result with the [OCI runtime specification](https://github.com/opencontainers/runtime-spec)
+without expanding the lesson into a full orchestrator.
+
 ## Optional extensions
 
 Add an OCI bundle adapter, overlayfs layers, rootless networking through `slirp4netns` or `pasta`, checkpoint and restore with CRIU, port forwarding, signed rootfs archives, or a shim API for a higher-level container manager.

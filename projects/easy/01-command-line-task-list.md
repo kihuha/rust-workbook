@@ -34,6 +34,18 @@ Structs, vectors, enums, command-line arguments, file I/O, error handling, borro
 
 Tasks survive a restart, IDs do not change when an item is removed, invalid commands do not modify the file, and the domain operations can be tested without launching the CLI.
 
+## System-design foundation
+
+Treat the saved file as a tiny database: define stable task identity, an atomic save boundary, and
+what happens after a truncated or incompatible file. This prepares configuration and control-plane
+projects where durable desired state must survive restart. Continue with the
+[configuration merger](../medium/07-configuration-merger.md).
+
+### Foundation evidence
+
+- `F01` — Interrupt or fail a save before rename and prove the previous complete file still loads.
+- `F02` — Load a truncated and an unsupported-version fixture and return a typed error without data loss.
+
 ## Brown Rust Book prerequisites
 
 Study [struct methods](https://rust-book.cs.brown.edu/ch05-03-method-syntax.html), [enums and matching](https://rust-book.cs.brown.edu/ch06-00-enums.html), [vectors](https://rust-book.cs.brown.edu/ch08-01-vectors.html), [`Result`](https://rust-book.cs.brown.edu/ch09-02-recoverable-errors-with-result.html), [test organization](https://rust-book.cs.brown.edu/ch11-03-test-organization.html), and the [CLI project](https://rust-book.cs.brown.edu/ch12-00-an-io-project.html).

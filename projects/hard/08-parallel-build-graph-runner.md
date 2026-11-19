@@ -35,6 +35,17 @@ Directed graphs, cycle detection, concurrent scheduling, process management, has
 
 Every task runs at most once, cycles are rejected before execution, concurrency respects the limit, failure blocks only dependent work, and cache invalidation is tested.
 
+## System-design foundation
+
+Make desired dependencies, observed results, cache fingerprints, and retry/cancellation state
+explicit. Measure critical-path time and worker utilization. This prepares reconciliation loops,
+workflow orchestration, and fair scheduling.
+
+### Foundation evidence
+
+- `F01` — Inject task failure/cancellation/cache corruption and prove only valid ready work runs and dependents reach explicit states.
+- `F02` — Benchmark serial and bounded parallel execution; report critical path, utilization, cache hit rate, and peak runnable queue.
+
 ## Brown Rust Book prerequisites
 
 Study [collections](https://rust-book.cs.brown.edu/ch08-00-common-collections.html), [closures and iterators](https://rust-book.cs.brown.edu/ch13-00-functional-features.html), [worker coordination](https://rust-book.cs.brown.edu/ch16-00-concurrency.html), and [pattern syntax](https://rust-book.cs.brown.edu/ch19-03-pattern-syntax.html).

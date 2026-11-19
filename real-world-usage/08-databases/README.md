@@ -7,10 +7,11 @@ Production-style storage engines and data services with durable formats, indexes
 | [01 — PulseStore](01-pulsestore/README.md) | Industrial-monitoring company | Embedded time-series storage engine |
 | [02 — BranchStore](02-branchstore/README.md) | Inventory platform | Page-oriented B+ tree key-value engine |
 | [03 — LogStore](03-logstore/README.md) | Offline-first field-service platform | Log-structured merge-tree key-value engine |
+| [04 — ShardStore](04-shardstore/README.md) | Global feature-configuration platform | Partitioned and replicated key-value service |
 
 Add future database briefs as sibling project directories with their own `README.md`.
 
-## DDIA reading path for projects 09 and 10
+## DDIA reading path for storage projects
 
 Both projects turn the OLTP storage-engine ideas in Martin Kleppmann and Chris Riccomini's *Designing Data-Intensive Applications*, 2nd Edition (O'Reilly, 2026) into small Rust systems. Read [Chapter 4, “Storage and Retrieval”](https://www.oreilly.com/library/view/designing-data-intensive-applications/9781098119058/ch04.html) in this order:
 
@@ -24,3 +25,6 @@ The projects deliberately use a shared key-value API so that the storage strateg
 Use the [official second-edition book page](https://www.oreilly.com/library/view/designing-data-intensive-applications/9781098119058/) to verify the edition and table of contents. Section names are given instead of page numbers because print and digital pagination can differ.
 
 The companion [DDIA 2nd-edition storage-engine research note](../../research/ddia2-storage-engines.md) maps these sections to the project requirements and links the authors' official Chapter 4 bibliography, the original B-tree and LSM-tree papers, and production examples in SQLite and RocksDB.
+
+Complete BranchStore or LogStore before ShardStore. The first two expose local durability and
+indexing; ShardStore makes replication, partitioning, failure detection, and consistency visible.

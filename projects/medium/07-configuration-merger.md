@@ -34,6 +34,17 @@ Serde-style decoding, enums, generic parsing helpers, environment and CLI access
 
 Every precedence combination is tested, invalid values name their source, secrets never appear in debug output, and the final type cannot represent missing required fields.
 
+## System-design foundation
+
+Preserve value provenance, make precedence explicit, redact secrets, and version the resolved
+format. Add an old/new compatibility test and atomic reload behavior. Continue with NimbusFleet's
+configuration rollout and [TenantPlane](../../real-world-usage/02-cloud-infrastructure/07-tenantplane/README.md).
+
+### Foundation evidence
+
+- `F01` — Produce a provenance trace for every resolved value and property-test precedence independent of map iteration order.
+- `F02` — Reload invalid/old/new fixtures atomically; prove failure retains the last valid configuration and secrets stay redacted.
+
 ## Brown Rust Book prerequisites
 
 Study [enums](https://rust-book.cs.brown.edu/ch06-00-enums.html), [error design](https://rust-book.cs.brown.edu/ch09-00-error-handling.html), [generics and traits](https://rust-book.cs.brown.edu/ch10-00-generics.html), and [arguments plus environment variables](https://rust-book.cs.brown.edu/ch12-00-an-io-project.html).

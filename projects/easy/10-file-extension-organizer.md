@@ -30,6 +30,17 @@ Paths, directory iteration, enums, maps, error propagation, ownership, command-l
 
 Dry-run makes no changes, collisions never overwrite data, directories are not moved, and one file failure does not hide the final summary.
 
+## System-design foundation
+
+Separate planning from execution, make operations idempotent where possible, and publish changes
+atomically. Inject failure between every filesystem step and document recovery. Continue with the
+[incremental backup tool](../hard/04-incremental-backup-tool.md).
+
+### Foundation evidence
+
+- `F01` — Inject failure before and after each planned move and prove rerun reaches the intended state without overwriting data.
+- `F02` — Property-test generated unsafe names, collisions, symlinks, and traversal attempts inside temporary directories.
+
 ## Brown Rust Book prerequisites
 
 Study [module boundaries](https://rust-book.cs.brown.edu/ch07-00-managing-growing-projects-with-packages-crates-and-modules.html), [error propagation](https://rust-book.cs.brown.edu/ch09-02-recoverable-errors-with-result.html), [integration tests](https://rust-book.cs.brown.edu/ch11-03-test-organization.html), and the [file-oriented CLI project](https://rust-book.cs.brown.edu/ch12-00-an-io-project.html).

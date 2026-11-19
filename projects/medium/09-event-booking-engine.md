@@ -32,6 +32,18 @@ Structs, enums, queues and maps, mutable state transitions, date-time parsing, c
 
 Confirmed seats never exceed capacity, IDs remain stable, cancellations are idempotent or return a clear error, and reload preserves wait-list order.
 
+## System-design foundation
+
+State the capacity invariant, add idempotent booking IDs, model expiring holds with an injected
+clock, and run concurrent/generated command sequences. Continue with
+[SwiftCart](../../real-world-usage/01-backend-development/01-swiftcart/README.md), where contention,
+persistence, retries, and reconciliation are production requirements.
+
+### Foundation evidence
+
+- `F01` — Run concurrent/generated reserve, expire, confirm, cancel, and promote commands; capacity never goes negative or over limit.
+- `F02` — Repeat operation IDs and advance an injected clock across expiry; prove idempotency and deterministic waitlist promotion.
+
 ## Brown Rust Book prerequisites
 
 Study [methods](https://rust-book.cs.brown.edu/ch05-03-method-syntax.html), [state enums](https://rust-book.cs.brown.edu/ch06-00-enums.html), [collections](https://rust-book.cs.brown.edu/ch08-00-common-collections.html), [recoverable errors](https://rust-book.cs.brown.edu/ch09-02-recoverable-errors-with-result.html), and [automated tests](https://rust-book.cs.brown.edu/ch11-00-testing.html).

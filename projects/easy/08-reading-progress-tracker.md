@@ -29,6 +29,17 @@ Structs, enums, methods, validation, collections, filtering, formatting, persist
 
 Status always agrees with page progress, zero-page books are rejected, and invalid updates never partially mutate a book.
 
+## System-design foundation
+
+Represent lifecycle states so invalid combinations cannot be constructed, and define whether
+progress updates are monotonic or correctable. This prepares explicit workflow state machines and
+event-driven projections.
+
+### Foundation evidence
+
+- `F01` — Generate lifecycle transitions and prove invalid transitions leave the prior record unchanged.
+- `F02` — Rebuild every summary from saved source records and compare it with the served report.
+
 ## Brown Rust Book prerequisites
 
 Study [structs](https://rust-book.cs.brown.edu/ch05-00-structs.html), [enums](https://rust-book.cs.brown.edu/ch06-00-enums.html), [collections](https://rust-book.cs.brown.edu/ch08-00-common-collections.html), [tests](https://rust-book.cs.brown.edu/ch11-00-testing.html), and [filtering with iterators](https://rust-book.cs.brown.edu/ch13-02-iterators.html).

@@ -110,15 +110,29 @@ auditor reads the ordered custody history
 - `T13` — Measure worst-case execution cost and enforce transaction limits.
 - `T14` — Upgrade a local deployment while preserving storage and event compatibility.
 
-## Deployment target
+## Local deployment and production design exercise
 
-Use a local network for development, a public test network for integration, and a permissioned or public production network only after governance and audit approval.
+Run the contract/runtime, indexer, reorganization/finality simulation, and replay tools on a local
+network. A public test network is optional; never require fees, credentials, or a production chain
+to complete the learning evidence.
 
-Deploy the indexer as a replicated Rust service with durable checkpoints, database backups, lag alerts, RPC failover, and replay tools. Pin the contract artifact hash and publish reproducible build instructions.
+Demonstrate durable checkpoints, database backup/restore, lag alerts, RPC failover simulation, replay,
+artifact pinning, and reproducible builds. Treat production governance/network choice as a design
+review requiring independent audit, not as a deployment claim.
 
 ## Acceptance criteria
 
 Independent organizations can complete the lifecycle with authorized signatures, auditors can reconstruct ordered provenance, documents remain off-chain, and contract plus indexer state survive restart and replay.
+
+## System-design practice
+
+Declare organizations, batches, events/batch, document sizes, chain finality, query mix, and
+execution/storage cost limits. Measure submission/finality/indexing p95/p99, reorganization lag,
+throughput, and cost/event. Senior proves authorized provenance; Staff adds indexer replay,
+governance/version migration, participant fairness, privacy deletion boundaries, and failover;
+Principal compares blockchain with a consortium database, defines ownership and dispute authority,
+regional/legal policy, long-term cost, upgrade, and exit migration. A design review must justify why
+multiple writers without one administrator require this trust model.
 
 ## Optional extensions
 

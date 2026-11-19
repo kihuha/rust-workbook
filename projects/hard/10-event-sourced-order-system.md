@@ -35,6 +35,17 @@ Domain modeling, enums, event replay, optimistic concurrency, append-only storag
 
 Replay produces the same state as live command handling, stale versions fail without appending, invalid commands emit no events, and projection rebuilds are deterministic.
 
+## System-design foundation
+
+Treat events as a compatibility contract, make optimistic conflicts observable, rebuild projections,
+and migrate one event version without rewriting history. Continue with SwiftCart, PayForge, and
+[EventLog](../../real-world-usage/11-messaging-streaming/01-eventlog/README.md).
+
+### Foundation evidence
+
+- `F01` — Generate concurrent command histories and assert optimistic conflicts append nothing while replay equals live state.
+- `F02` — Add one event version/upcaster, rebuild old/new projections, compare results, and demonstrate rollback without editing history.
+
 ## Brown Rust Book prerequisites
 
 Study [structs](https://rust-book.cs.brown.edu/ch05-00-structs.html), [event enums](https://rust-book.cs.brown.edu/ch06-00-enums.html), [trait boundaries](https://rust-book.cs.brown.edu/ch10-02-traits.html), [design tradeoffs](https://rust-book.cs.brown.edu/ch18-05-design-challenge.html), and [patterns](https://rust-book.cs.brown.edu/ch19-00-patterns.html).

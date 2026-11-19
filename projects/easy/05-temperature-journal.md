@@ -32,6 +32,17 @@ Structs, floating-point values, validation, collections, iterators, `Option`, fi
 
 Empty journals return no statistics, duplicate dates follow the replacement rule, and conversion tests allow a small floating-point tolerance.
 
+## System-design foundation
+
+Define timestamp, duplicate, missing-value, and numeric-precision policy. Measure how aggregation
+work changes with the number of samples. Continue with
+[PulseStore](../../real-world-usage/08-databases/01-pulsestore/README.md) and SignalWorks.
+
+### Foundation evidence
+
+- `F01` — Test duplicate timestamps, empty ranges, non-finite values, timezone boundaries, and the documented policy.
+- `F02` — Benchmark aggregation over 1,000, 100,000, and 1,000,000 generated samples and report time plus peak memory.
+
 ## Brown Rust Book prerequisites
 
 Study [data types and control flow](https://rust-book.cs.brown.edu/ch03-00-common-programming-concepts.html), [structs](https://rust-book.cs.brown.edu/ch05-00-structs.html), [vectors](https://rust-book.cs.brown.edu/ch08-01-vectors.html), [writing tests](https://rust-book.cs.brown.edu/ch11-01-writing-tests.html), and [iterator adapters](https://rust-book.cs.brown.edu/ch13-02-iterators.html).

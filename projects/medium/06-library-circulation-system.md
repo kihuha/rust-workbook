@@ -31,6 +31,17 @@ Domain modeling, structs and enums, maps, date arithmetic, validation, borrowing
 
 The catalog and loan history survive reloads, failed checkouts change nothing, and availability is derived correctly for every copy.
 
+## System-design foundation
+
+Express cross-entity invariants for copy availability, loans, holds, and fines. Make multi-step
+operations atomic in memory, then state what a persistent transaction would need to protect. This
+prepares reservation and workflow services.
+
+### Foundation evidence
+
+- `F01` — Generate checkout/hold/return/lost sequences and assert copy, loan, and queue invariants after every command.
+- `F02` — Inject failure between steps of return-and-promote; either roll back all state or recover from a persisted intent.
+
 ## Brown Rust Book prerequisites
 
 Study [structs and methods](https://rust-book.cs.brown.edu/ch05-00-structs.html), [enums](https://rust-book.cs.brown.edu/ch06-00-enums.html), [hash maps](https://rust-book.cs.brown.edu/ch08-03-hash-maps.html), [error handling](https://rust-book.cs.brown.edu/ch09-00-error-handling.html), and [tests](https://rust-book.cs.brown.edu/ch11-00-testing.html).

@@ -32,6 +32,17 @@ Structs, maps, decimal or carefully tested floating-point calculations, parsing,
 
 Invalid policies fail before grading, missing scores follow a documented rule, imports are all-or-nothing, and example calculations are covered by tests.
 
+## System-design foundation
+
+Keep raw facts separate from versioned policy and derived reports. Recompute results after a policy
+change and retain provenance. This is the same source-of-truth versus materialized-view distinction
+used in ledgers, search, and analytics systems.
+
+### Foundation evidence
+
+- `F01` — Change grading policy without mutating raw scores, then rebuild and compare every derived result.
+- `F02` — Persist policy version/provenance and test that a report identifies exactly which policy produced it.
+
 ## Brown Rust Book prerequisites
 
 Study [`Option` and matching](https://rust-book.cs.brown.edu/ch06-00-enums.html), [modules](https://rust-book.cs.brown.edu/ch07-00-managing-growing-projects-with-packages-crates-and-modules.html), [errors](https://rust-book.cs.brown.edu/ch09-00-error-handling.html), [traits](https://rust-book.cs.brown.edu/ch10-02-traits.html), and [tests](https://rust-book.cs.brown.edu/ch11-00-testing.html).

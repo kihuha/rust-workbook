@@ -1,6 +1,9 @@
 # Hard projects
 
-These projects require deliberate architecture, failure recovery, concurrency or protocol design, and broader automated testing. Build them in milestones.
+These projects require deliberate architecture, failure recovery, concurrency or protocol design,
+and broader automated testing. Build them in milestones. They are deliberately smaller than the
+real-world systems so the learner can implement the difficult primitive before organizational,
+multi-tenant, multi-region, and operational concerns are added.
 
 ## Projects and Brown Rust Book prerequisites
 
@@ -20,3 +23,17 @@ These projects require deliberate architecture, failure recovery, concurrency or
 ## Readiness check
 
 Start this level after completing two medium projects and the linked later chapters. You should already be able to test failure recovery and reason about concurrent ownership.
+
+## Real-world continuations
+
+| Hard project | Primitive learned | Continue with |
+| --- | --- | --- |
+| Async chat server | Long-lived sessions, fan-out, slow consumers | [CollabPad](../../real-world-usage/12-real-time-collaboration/01-collabpad/README.md) |
+| Persistent KV store | WAL, recovery, compaction | [LogStore](../../real-world-usage/08-databases/03-logstore/README.md), then [ShardStore](../../real-world-usage/08-databases/04-shardstore/README.md) |
+| Durable scheduler | State, leases, retries, recovery | [DurableQueue](../../real-world-usage/02-cloud-infrastructure/05-durablequeue/README.md) |
+| Incremental backup | Content addressing and atomic publication | Storage snapshots, replication, and restore exercises |
+| Mini relational database | Schema, indexes, transactions | PayForge, BankBridge, and distributed storage |
+| Rate-limited HTTP service | Admission, quotas, API boundaries | [StreamGate](../../real-world-usage/05-networking/01-streamgate/README.md) and [TenantPlane](../../real-world-usage/02-cloud-infrastructure/07-tenantplane/README.md) |
+| Parallel build graph | Dependency scheduling and caching | NimbusFleet reconciliation and workflow orchestration |
+| Resumable transfer | Framing, integrity, retry, publication | ShardStore repair and regional migration |
+| Event-sourced orders | Immutable history and optimistic concurrency | SwiftCart, PayForge, and EventLog |

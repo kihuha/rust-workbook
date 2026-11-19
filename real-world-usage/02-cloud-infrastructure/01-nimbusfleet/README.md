@@ -12,7 +12,8 @@ Study [modules](https://rust-book.cs.brown.edu/ch07-00-managing-growing-projects
 
 ## Required components
 
-- `fleet-api`: authenticated REST API for operators and CI systems.
+- `fleet-control`: authenticated operator/CI boundary implemented as a CLI over a local socket,
+  HTTP, gRPC, or another justified adapter.
 - `fleet-controller`: reconciliation loop and rollout state machine.
 - `fleet-agent`: node daemon using outbound-only mTLS communication.
 - `fleet-store`: durable desired state, leases, events, and audit records.
@@ -20,18 +21,25 @@ Study [modules](https://rust-book.cs.brown.edu/ch07-00-managing-growing-projects
 
 Use a Cargo workspace with separate crates for protocol types, domain rules, storage, server, agent, and CLI.
 
-## Control-plane API
+## Control-plane contract
 
-| Method | Endpoint | Purpose |
+Provide one documented operator/automation interface. The transport is an architectural choice, not
+the lesson: a local CLI/socket is sufficient for the Senior milestone; HTTP or gRPC is appropriate
+only when the learner wants to practise remote multi-client control. Keep the application service
+independent from the chosen adapter.
+
+| Operation | Purpose | Contract requirement |
 | --- | --- | --- |
-| `POST` | `/v1/apps` | Register an application and rollout policy |
-| `PUT` | `/v1/apps/{app}/desired` | Set image digest and configuration revision |
-| `GET` | `/v1/apps/{app}/rollouts/{id}` | Inspect rollout progress and failures |
-| `POST` | `/v1/apps/{app}/rollouts/{id}/pause` | Pause new replacements |
-| `POST` | `/v1/apps/{app}/rollouts/{id}/resume` | Resume a paused rollout |
-| `POST` | `/v1/apps/{app}/rollouts/{id}/rollback` | Restore the previous healthy revision |
-| `GET` | `/v1/nodes` | List node heartbeats and assigned revisions |
-| `GET` | `/health/ready` | Report storage and leadership readiness |
+| Register application | Store an application and rollout policy | Validate identity and policy before mutation |
+| Set desired revision | Set image digest and configuration revision | Idempotent or compare-and-set; audit every accepted change |
+| Inspect rollout | Read progress, failures, and current/desired revisions | Stable machine-readable state, not log scraping |
+| Pause/resume | Control whether new replacements may start | Repeated commands are safe |
+| Roll back | Restore the previous healthy revision | Name the exact target revision and audit the actor |
+| Inspect nodes | List heartbeats, capabilities, and assigned revisions | Paginate/bound results and mark stale observations |
+| Read readiness | Report storage, leadership, and reconciliation readiness | Separate process liveness from ability to make safe progress |
+
+If the chosen adapter is remote, authenticate and authorize it and add transport-specific boundary
+tests. Do not spend the project implementing a general-purpose API framework.
 
 ## Agent protocol
 
@@ -95,22 +103,47 @@ Expose reconciliation duration, queue depth, connected agents, stale nodes, roll
 - `T11` — Partition one region, continue safe progress elsewhere, then reconcile on recovery.
 - `T12` — Load-test heartbeats and commands at the target fleet size without unbounded memory growth.
 
-## Deployment target
+## Local deployment and production design exercise
 
-Deploy three controller replicas across availability zones with one active lease holder. Use a managed relational database, automated migrations, encrypted backups, network policies, pod disruption budgets, and separate agent release artifacts.
+Run three local controller processes, a local relational database, and simulated agents with one
+active lease holder. Demonstrate migration, backup/restore, certificate rotation, controller/agent
+version skew, rollout, and rollback in the harness.
 
-Provide Terraform or equivalent infrastructure definitions, dashboards, alerts, certificate-rotation runbooks, disaster recovery steps, and a staged upgrade plan for protocol compatibility.
+Then produce—but do not claim to have validated—a multi-zone deployment proposal covering failure
+domains, network policy, disruption budgets, encrypted backups, infrastructure definition,
+dashboards, alerts, disaster recovery, and protocol upgrade. Cloud resources are optional.
 
-## Service-level objectives
+## Local scale and recovery targets
 
-- API and reconciliation availability: `99.95%` monthly.
 - Healthy agent heartbeat reflected in control plane within `15 seconds` p99.
 - Controller restart must not lose desired state or issue duplicate non-idempotent actions.
 - A 1,000-node rollout must remain within its configured disruption budget.
 
+Run these targets with simulated nodes under a declared machine and workload. They establish local
+behavior, not production availability. A later architecture review may derive an SLI/objective and
+error budget from user impact, dependency behavior, and an actual deployment model.
+
 ## Acceptance criteria
 
 The system is complete when an operator can register an app, roll out a digest, observe progress, survive controller and agent restarts, pause, resume, rollback, rotate credentials, and recover the control-plane store.
+
+## System-design progression
+
+The required build is the Senior milestone. Define fleet size, heartbeat distribution, rollout
+mix, node churn, configuration size, and storage limits. Measure reconciliation and command
+p50/p95/p99, stale-node detection, controller queues, database saturation, and recovery time.
+
+For Staff practice, shard reconciliation ownership, introduce protocol/version skew, fence stale
+controllers at the protected agent operation, throttle regional rollout work, and migrate between
+planner algorithms while a rollout is active.
+
+For Principal practice, define which actions a region may take while isolated from the central
+plane, quorum and control-plane placement, capacity reserve, RPO/RTO, certificate and protocol
+deprecation, team ownership, and a disaster-recovery exercise with measured outcomes.
+
+Review [Kubernetes controller guidance](https://kubernetes.io/docs/concepts/architecture/controller/),
+the [Raft material](https://raft.github.io/), and [Google SRE](https://sre.google/books/); implement
+the relevant behavior rather than copying a production control plane wholesale.
 
 ## Optional extensions
 

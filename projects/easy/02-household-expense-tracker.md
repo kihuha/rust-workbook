@@ -36,6 +36,17 @@ Structs, `Vec`, `HashMap`, string parsing, sorting, file I/O, `Result`, iterator
 
 The totals are deterministic, a bad row identifies its source line, and a failed load never returns a partially valid ledger as if it succeeded.
 
+## System-design foundation
+
+Use integer minor units, define rounding explicitly, and reconcile every report to its source
+records. This is the first version of the money invariants later required by the
+[personal finance ledger](../medium/01-personal-finance-ledger.md) and PayForge.
+
+### Foundation evidence
+
+- `F01` — Property-test that every category/month summary equals the exact sum of its source records.
+- `F02` — Test currency-scale and rounding boundaries without using binary floating point for money.
+
 ## Brown Rust Book prerequisites
 
 Study [common collections](https://rust-book.cs.brown.edu/ch08-00-common-collections.html), [recoverable errors](https://rust-book.cs.brown.edu/ch09-02-recoverable-errors-with-result.html), [writing tests](https://rust-book.cs.brown.edu/ch11-01-writing-tests.html), [reading files](https://rust-book.cs.brown.edu/ch12-02-reading-a-file.html), and [iterators](https://rust-book.cs.brown.edu/ch13-02-iterators.html).

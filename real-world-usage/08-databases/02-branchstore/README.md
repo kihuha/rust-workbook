@@ -148,6 +148,20 @@ Treat database files as untrusted input. Bounds-check offsets and lengths before
 
 BranchStore is complete when the model-based tests, invariant checker, crash matrix, compatibility test, and documented benchmarks pass against a versioned format, and when the results explain at least two measured consequences of choosing a B+ tree.
 
+## System-design progression
+
+Treat the required engine as the Senior milestone. Define dataset, key/value distribution, cache
+state, page size, storage medium, sync mode, compiler profile, and resource limits for every
+benchmark. Report read/write/space amplification, p50/p95/p99, recovery, and the saturation point.
+
+For Staff practice, perform an online format/index migration with old readers, add a snapshot-based
+replica-transfer interface, and inject disk-full, torn-write, checksum, and long-reader failures.
+Use the same workload against LogStore and explain measured differences rather than declaring a
+universal winner.
+
+For Principal review, propose how BranchStore could back ShardStore, including ownership,
+compatibility, restore, cost, and which distributed guarantees remain outside the local engine.
+
 ## Optional extensions
 
 Add prefix-compressed keys, overflow pages for large values, a clock or LRU page cache, copy-on-write checkpoints, group commit, reader snapshots, or online file compaction.

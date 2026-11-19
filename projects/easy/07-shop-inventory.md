@@ -30,6 +30,17 @@ Structs, `HashMap`, mutable borrowing, checked arithmetic, custom errors, comman
 
 A rejected sale leaves quantity unchanged, totals cannot silently overflow, and stock operations are separate from CLI code.
 
+## System-design foundation
+
+Write the stock invariant before the implementation and test that rejected and repeated operations
+are atomic. Then run generated command sequences. This directly prepares the
+[event booking engine](../medium/09-event-booking-engine.md) and SwiftCart's reservation rules.
+
+### Foundation evidence
+
+- `F01` — Generate stock/add/sell/return sequences and assert quantity never becomes negative.
+- `F02` — Repeat an operation ID and attempt an oversized sale; prove neither changes stock more than once.
+
 ## Brown Rust Book prerequisites
 
 Study [methods](https://rust-book.cs.brown.edu/ch05-03-method-syntax.html), [hash maps](https://rust-book.cs.brown.edu/ch08-03-hash-maps.html), [panic policy](https://rust-book.cs.brown.edu/ch09-03-to-panic-or-not-to-panic.html), [automated tests](https://rust-book.cs.brown.edu/ch11-00-testing.html), and [CLI modularity](https://rust-book.cs.brown.edu/ch12-03-improving-error-handling-and-modularity.html).

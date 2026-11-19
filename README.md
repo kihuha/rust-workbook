@@ -18,7 +18,9 @@ The workbook intentionally omits the book Introduction, Chapter 2 guessing-game 
 
 Chapter 12 remains because its project introduces practical CLI arguments, file I/O, environment variables, `stderr`, modular design, and test-driven development.
 
-The [`projects/`](projects/README.md) track combines several topics in larger, practical builds. It contains 10 easy, 10 medium, and 10 hard project briefs.
+The [`projects/`](projects/README.md) track combines several topics in larger, practical builds. It
+contains 10 easy, 10 medium, and 10 hard project briefs. Each project now identifies the invariant,
+boundary, bounded resource, or recovery behavior it contributes to later system-design work.
 
 Work through the projects by scope when you want integration practice rather than a topic-specific exercise.
 
@@ -58,4 +60,13 @@ From Chapter 11 onward, and in every project brief, tests are separated into uni
 
 ## Real-world usage
 
-The [real-world Rust challenges](real-world-usage/README.md) cover 10 production domains with company context, interfaces, operational constraints, test plans, deployment targets, and acceptance criteria.
+The [real-world Rust challenges](real-world-usage/README.md) cover production domains with company
+context, interfaces, operational constraints, test plans, deployment targets, acceptance criteria,
+and progressive Senior, Staff, and Principal requirement envelopes.
+
+Use the [system-design curriculum](research/system-design-curriculum/README.md) to move from chapter
+concepts through integration projects into distributed systems, transactional platforms,
+multi-tenant and multi-region architecture, real-time collaboration, search, observability, and AI
+infrastructure. The [research guide](research/system-design-reading-guide.md) links authoritative
+background sources; implementation, measurement, and failure experiments remain the evidence of
+learning.

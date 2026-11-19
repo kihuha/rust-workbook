@@ -35,6 +35,17 @@ Async scheduling, priority queues, process management, state machines, persisten
 
 Jobs do not exceed the worker limit, cancellation is race-safe, restart reconstructs state, and tests use a fake clock rather than waiting in real time.
 
+## System-design foundation
+
+Separate admission, scheduling, execution, and outcome; use an injected clock; bound runnable work;
+and model recovery from every persisted state. This is the direct prerequisite for
+[DurableQueue](../../real-world-usage/02-cloud-infrastructure/05-durablequeue/README.md).
+
+### Foundation evidence
+
+- `F01` — Crash after every persisted job state and prove restart reaches the documented eligible terminal/retry state.
+- `F02` — Saturate the worker limit with slow jobs; report queue age, start-delay p95/p99, memory, and cancellation behavior.
+
 ## Brown Rust Book prerequisites
 
 Study [state enums](https://rust-book.cs.brown.edu/ch06-00-enums.html), [trait boundaries](https://rust-book.cs.brown.edu/ch10-02-traits.html), [thread coordination](https://rust-book.cs.brown.edu/ch16-00-concurrency.html), and [tasks versus threads](https://rust-book.cs.brown.edu/ch17-06-futures-tasks-threads.html).

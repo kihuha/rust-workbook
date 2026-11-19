@@ -119,7 +119,7 @@ Produce reproducible optimized Wasm and JavaScript packages with source maps han
 
 Deploy as a static site behind TLS and a strict CSP. Provide version compatibility between the UI and Wasm module, rollback to the previous asset set, and browser-based error reporting without sensitive data.
 
-## Service objectives
+## Local browser acceptance targets
 
 - The UI remains interactive during import and query work.
 - The target dataset stays within the documented peak-memory budget.
@@ -129,6 +129,16 @@ Deploy as a static site behind TLS and a strict CSP. Provide version compatibili
 ## Acceptance criteria
 
 A user can import the example and target-size datasets, correct schema, query, page, cancel, and export entirely locally in each supported browser with documented performance and accessibility results.
+
+## System-design practice
+
+Declare file/row/column distributions, query mix, browser/device classes, memory cap, cache state,
+and run duration. Measure load/query p50/p95/p99, main-thread blocking, memory, bytes copied, and
+cancellation cleanup. Senior delivers bounded local analytics; Staff adds worker partitioning,
+versioned cached state, compatibility, incremental import, and safe rollout; Principal defines
+privacy and browser-support policy, packaging ownership, cost/performance trade-offs, migration to
+server execution, and rollback. Research the [WebAssembly specifications](https://webassembly.org/specs/)
+and verify behavior in each supported browser class.
 
 ## Optional extensions
 

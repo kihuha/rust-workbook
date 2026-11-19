@@ -1,6 +1,9 @@
 # Medium projects
 
-These projects require clearer module boundaries, broader testing, and at least one non-trivial integration such as concurrency, structured persistence, or external I/O.
+These projects require clearer module boundaries, broader testing, and at least one non-trivial
+integration such as concurrency, structured persistence, or external I/O. Treat this level as
+component-design training: use traits at replaceable boundaries, bound work, preserve provenance,
+classify partial failure, and make invariants testable without the outer interface.
 
 ## Projects and Brown Rust Book prerequisites
 
@@ -20,3 +23,17 @@ These projects require clearer module boundaries, broader testing, and at least 
 ## Readiness check
 
 Start this level after completing two easy projects and the linked book chapters. You should be comfortable keeping domain logic outside `main.rs` and testing through a public API.
+
+## Where these integrations lead
+
+| Medium integration | Continue with |
+| --- | --- |
+| Finance ledger | Event-sourced orders, then PayForge's immutable ledger |
+| Parallel log analyzer | EventLog ingestion and SignalWorks aggregation |
+| Async website monitor | StreamGate health, timeouts, and SignalWorks alert evaluation |
+| Configuration merger | NimbusFleet configuration rollout and TenantPlane compatibility |
+| Event booking | SwiftCart contention, idempotency, reservations, and reconciliation |
+| Local note index | SearchGrid segments, ranking, sharding, and reindex migration |
+
+Before moving to hard projects, be able to explain one backpressure point, one recovery boundary,
+and one alternative design for the project you completed.

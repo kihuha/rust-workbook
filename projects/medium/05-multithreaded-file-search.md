@@ -28,6 +28,17 @@ Paths, recursive traversal, threads, channels, byte and string handling, argumen
 
 Results match a single-threaded reference, unreadable files are reported without ending the search, workers are bounded, and output is deterministic.
 
+## System-design foundation
+
+Separate traversal from search workers, bound both queues, propagate cancellation, and define
+stable output ordering. Compare one worker with increasing parallelism until storage rather than
+CPU becomes the bottleneck.
+
+### Foundation evidence
+
+- `F01` — Stall search workers during a large traversal and assert traversal/search queues never exceed their limits.
+- `F02` — Benchmark 1, 2, 4, and 8 workers on warm and cold runs; report throughput, memory, and stable output equivalence.
+
 ## Brown Rust Book prerequisites
 
 Study the [CLI and file project](https://rust-book.cs.brown.edu/ch12-00-an-io-project.html), [iterator pipelines](https://rust-book.cs.brown.edu/ch13-02-iterators.html), and [threads plus channels](https://rust-book.cs.brown.edu/ch16-00-concurrency.html).
