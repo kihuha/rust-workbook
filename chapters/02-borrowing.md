@@ -2,36 +2,64 @@
 
 ## Challenge 004 — Account preview
 
-**Mini brief:** A banking console should display an account summary without taking ownership of the account name or balance data.
+**Challenge:** A banking console must display the same account more than once without transferring ownership or cloning its data.
 
-**Practice:** Shared references and read-only function parameters.
+**Your task:** Write `account_summary(label: &str, balance_cents: &i64) -> String`. Call it twice with the same owned label and balance, then use both values again in `main`.
 
-**Requirements:** Write a function that accepts `&str` for the account label and `&f64` (or an integer cents value) for the balance, then returns a summary. Call it more than once with the same data.
+**Requirements:** The helper must only read its inputs. Format cents as a currency value, including two decimal places.
 
-**Done when:** The caller still owns and can use its values after each call. Explain why the function needs no clone.
+**Example input:** Label `Holiday Fund`, balance `125050` cents.
 
-**Stretch:** Change the label argument to `&String`, then decide which signature is more flexible and why.
+**Expected output from each call:**
+
+```text
+Holiday Fund: 1250.50
+```
+
+After both calls, printing the original label and balance must still compile.
+
+**Done when:** No clone is needed and you can explain why multiple shared references are allowed.
+
+**Stretch:** Change `&str` to `&String`, try both a `String` and a string literal as callers, and explain why `&str` is the more flexible parameter.
 
 ## Challenge 005 — Inventory restock
 
-**Mini brief:** A shop worker needs to increase the quantity of an item in place and then inspect the updated stock.
+**Challenge:** Stock must be updated in place while Rust prevents two writers from changing the quantity at the same time.
 
-**Practice:** Mutable references, `&mut`, and one-writer borrowing rules.
+**Your task:** Implement `restock(quantity: &mut u32, added: u32)`. Call it twice on the same quantity and print the final stock.
 
-**Requirements:** Implement `restock(quantity: &mut u32, added: u32)`. Call it twice and print the result. Try to create a second active mutable reference and record the compiler's complaint before fixing the code.
+**Requirements:** Also create a temporary failing example with two active mutable references. Record the compiler message, then fix it by ensuring the first borrow ends before the second begins.
 
-**Done when:** Restocking works, and you can state the rule Rust enforces for simultaneous mutable access.
+**Example input:** Starting quantity `12`; add `5`, then `3`.
 
-**Stretch:** Reject a restock that would overflow the quantity using `checked_add`.
+**Expected output:**
+
+```text
+Final quantity: 20
+```
+
+**Done when:** The updates occur through `&mut u32`, and you can state Rust's rule for simultaneous mutable access.
+
+**Stretch:** Change `restock` to use `checked_add` and return an error when the new quantity would exceed `u32::MAX`.
 
 ## Challenge 006 — Normalize a name
 
-**Mini brief:** An event sign-in list should remove accidental surrounding whitespace and capitalize attendee names.
+**Challenge:** An event list contains inconsistent whitespace and capitalization. Normalize each owned name through a mutable borrow so the caller sees the change.
 
-**Practice:** Mutating owned `String` values through a mutable borrow; distinguishing a borrow from an owned return value.
+**Your task:** Write `normalize_name(name: &mut String)`. Trim surrounding whitespace and capitalize the first character while lowercasing the remaining characters.
 
-**Requirements:** Write a function that takes `&mut String`, trims surrounding whitespace, and updates the same string. Run it on several names and verify the caller sees each edit.
+**Requirements:** Update the same `String`; do not make the caller replace it with a returned value. Define empty or whitespace-only input as an empty string.
 
-**Done when:** The function changes the caller's string without returning a new `String`.
+**Example inputs and results:**
 
-**Stretch:** Add a second helper that instead takes `&str` and returns a new normalized `String`; compare the APIs.
+```text
+"  aMINA  " -> "Amina"
+"KAMAU"     -> "Kamau"
+"   "       -> ""
+```
+
+Unicode capitalization can produce more than one character. Document whether your first version supports that fully or is intentionally ASCII-only.
+
+**Done when:** The caller's strings contain the normalized values after each call, and the empty case is safe.
+
+**Stretch:** Add `normalized_name(name: &str) -> String` and compare an in-place API with an owned-return API.

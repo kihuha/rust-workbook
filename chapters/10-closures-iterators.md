@@ -2,36 +2,69 @@
 
 ## Challenge 028 — Filtered score report
 
-**Mini brief:** A course dashboard needs the mean score for passing students and a count of students who need support.
+**Challenge:** Derive two related statistics from a score slice using iterator adapters and handle the case where no score passes.
 
-**Practice:** Iterator adapters, closures, and `filter`/`map`/`sum`.
+**Your task:** Given a pass mark, compute the mean of passing scores and the number of scores below the mark. Do not use an indexing loop.
 
-**Requirements:** Given a slice of scores, compute both results without an explicit indexing loop. Represent the no-passing-students case clearly.
+**Example input:** Scores `[72, 45, 88, 59, 90]`; pass mark `60`.
 
-**Done when:** Empty input and all-failing input do not cause division by zero.
+**Expected result:**
 
-**Stretch:** Compare the iterator version with a loop version for readability.
+```text
+Passing mean: 83.33
+Needs support: 2
+```
+
+**Requirements:** A score equal to the pass mark passes. Return `None` for the mean when there are no passing scores. Empty input must return `None` and support count `0`.
+
+**Done when:** `filter`, `map`, `sum`, or `count` express the calculation and no division by zero is possible.
+
+**Stretch:** Implement the same behavior with a loop and compare clarity and number of passes over the data.
 
 ## Challenge 029 — Transaction pipeline
 
-**Mini brief:** A ledger report should select deposits from a date range, convert them into display rows, and total their values.
+**Challenge:** Filter borrowed ledger entries, format matching rows, and total them without cloning the transactions.
 
-**Practice:** Lazy iterator pipelines, borrowing items, and collecting only when useful.
+**Your task:** Define a transaction with date, kind, description, and cents. Select deposits in an inclusive date range, produce display rows, and compute their total.
 
-**Requirements:** Define a transaction type, filter a borrowed slice by date and kind, then compute a total without cloning transactions.
+**Example input:**
 
-**Done when:** The pipeline stays readable and the original ledger remains available.
+```text
+2026-01-02 deposit Salary 100000
+2026-01-05 withdrawal Rent 40000
+2026-01-10 deposit Gift 5000
+range: 2026-01-01..=2026-01-07
+```
 
-**Stretch:** Split the pipeline into named iterator helpers and compare the resulting types/API.
+**Expected result:**
+
+```text
+2026-01-02 | Salary | +100000
+Total deposits: 100000 cents
+```
+
+**Requirements:** Filter the borrowed slice by kind and date. Keep the original ledger usable. Collect display strings only if the final API needs ownership.
+
+**Done when:** Boundary dates are included, withdrawals are excluded, and no transaction is cloned.
+
+**Stretch:** Extract named iterator helpers and compare their readability with one chained expression.
 
 ## Challenge 030 — Custom sequence iterator
 
-**Mini brief:** A reading app displays page numbers in a user-selected interval.
+**Challenge:** Implement iterator state and termination correctly for an inclusive page range.
 
-**Practice:** Implementing `Iterator`, `next`, and termination behavior.
+**Your task:** Create `PageRange::new(start, end)` and implement `Iterator<Item = u32>`. Yield every page from `start` through `end` once.
 
-**Requirements:** Create a `PageRange` iterator that yields page numbers from start through end. Ensure invalid or empty ranges yield no items.
+**Example results:**
 
-**Done when:** It works in a `for` loop and stops after the last page.
+```text
+PageRange::new(3, 6).collect() -> [3, 4, 5, 6]
+PageRange::new(5, 5).collect() -> [5]
+PageRange::new(6, 3).collect() -> []
+```
 
-**Stretch:** Implement `size_hint` and explain what it promises.
+**Requirements:** After returning `None`, later calls to `next` must also return `None`. Avoid overflow when `end == u32::MAX`.
+
+**Done when:** The iterator works in `for`, with `collect`, and under repeated `next` calls after exhaustion.
+
+**Stretch:** Implement an exact `size_hint` and explain its lower and upper bounds.

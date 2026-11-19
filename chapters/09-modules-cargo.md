@@ -2,36 +2,73 @@
 
 ## Challenge 025 — Split the banking library
 
-**Mini brief:** The account and transaction code is growing. Restructure it into a small library with clear public and private boundaries.
+**Challenge:** Separate growing banking code into modules with a small public API and private implementation details.
 
-**Practice:** Cargo package layout, modules, visibility, and `use` paths.
+**Your task:** Create a Cargo package with `accounts` and `transactions` library modules. The binary should create an account, deposit funds, withdraw funds, and print the balance through public APIs.
 
-**Requirements:** Create modules for accounts and transactions, expose only the types and operations needed by the binary, and keep internal validation helpers private.
+**Required layout:**
 
-**Done when:** The program builds with `cargo check` and a reader can find each domain concept quickly.
+```text
+src/
+├── lib.rs
+├── accounts.rs
+├── transactions.rs
+└── main.rs
+```
 
-**Stretch:** Add a module-level documentation comment explaining the library's purpose.
+**Example flow and output:**
+
+```text
+open account with 10000 cents
+deposit 2500 cents
+withdraw 3000 cents
+-> Balance: 9500 cents
+```
+
+**Requirements:** Keep field mutation and validation helpers private. Export only the types and operations needed by `main`. Use clear `use` paths.
+
+**Done when:** `cargo check` succeeds and direct access to private account fields from `main` fails to compile.
+
+**Stretch:** Add module-level `//!` documentation and confirm it appears in `cargo doc --open`.
 
 ## Challenge 026 — Unit conversion crate
 
-**Mini brief:** Create a reusable command-line converter for distance and temperature units.
+**Challenge:** Keep reusable conversion rules independent from command-line parsing and printing.
 
-**Practice:** Separating library logic from the CLI, Cargo targets, and reusable public functions.
+**Your task:** Put conversion functions in `src/lib.rs` and the CLI in `src/main.rs`. Support kilometers to miles, miles to kilometers, Celsius to Fahrenheit, and Fahrenheit to Celsius.
 
-**Requirements:** Put conversions in `src/lib.rs` and parsing/printing in `src/main.rs`. Support a small set of conversions and reject unknown units.
+**Example commands and output:**
 
-**Done when:** The library functions can be called independently of the command line.
+```text
+cargo run -- 10 km mi  -> 6.21 mi
+cargo run -- 32 f c    -> 0.00 c
+cargo run -- 5 kg mi   -> error: unsupported unit kg
+```
 
-**Stretch:** Add a second binary target for batch conversion from a text file.
+Use `1 km = 0.621371 mi`, `F = C × 9/5 + 32`, and `C = (F - 32) × 5/9`.
+
+**Requirements:** Library functions must not read arguments or print. CLI parsing must reject missing values, invalid numbers, and unsupported conversion pairs.
+
+**Done when:** Library functions have direct tests and work without the binary.
+
+**Stretch:** Add `src/bin/batch.rs` to convert requests from a text file.
 
 ## Challenge 027 — Dependency decision note
 
-**Mini brief:** A text-processing feature could be written with the standard library or with a small third-party crate.
+**Challenge:** Evaluate a dependency by comparing a working standard-library version with a focused crate-based improvement.
 
-**Practice:** Cargo dependencies, version declarations, and evaluating dependency costs.
+**Your task:** Build a word-frequency CLI using only `std`. Then add one small dependency that improves tokenization, Unicode handling, CLI parsing, or error reporting.
 
-**Requirements:** Implement a simple word-frequency command using only the standard library. Then add one focused dependency for a meaningful improvement, document why it helps, and inspect the Cargo manifest and lockfile changes.
+**Example input and base output:**
 
-**Done when:** You can build both versions and explain what Cargo records in each file.
+```text
+input: "Rust rust, safe!"
+rust: 2
+safe: 1
+```
 
-**Stretch:** Remove the dependency and compare code complexity and binary needs.
+**Requirements:** Record the chosen crate and exact improvement. Show the relevant `Cargo.toml` change and explain why `Cargo.lock` changed. Keep both versions comparable through tests or commits.
+
+**Done when:** Both versions build and your note explains the benefit, maintenance cost, transitive dependencies, and whether you would keep the crate.
+
+**Stretch:** Remove the dependency cleanly and confirm the manifest, lockfile, imports, and code still build.

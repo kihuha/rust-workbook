@@ -2,36 +2,70 @@
 
 ## Challenge 016 — Daily expense summary
 
-**Mini brief:** Track a day's purchases and report the total, largest item, and number of purchases above a chosen threshold.
+**Challenge:** Summarize a collection without consuming it or assuming it contains an item.
 
-**Practice:** `Vec`, iteration, borrowing collection elements, and safe empty-collection handling.
+**Your task:** Store expenses as `Vec<(String, u32)>`, where the number is cents. Compute the total, the largest item, and the number of expenses strictly above a threshold.
 
-**Requirements:** Store expenses as a vector of `(description, cents)` pairs. Write summary helpers that do not consume the vector. Define what the largest-item result should be when there are no expenses.
+**Example input:** Groceries `4500`, bus `150`, lunch `800`; threshold `500`.
 
-**Done when:** Empty, one-item, and multi-item cases are handled without indexing panics.
+**Expected result:**
 
-**Stretch:** Sort a separate view of the expenses by amount while preserving the original order.
+```text
+Total: 5450 cents
+Largest: Groceries (4500 cents)
+Above 500 cents: 2
+```
+
+**Requirements:** Summary helpers must borrow the slice. For an empty list, return total `0`, count `0`, and no largest item. Define how ties for largest are resolved.
+
+**Done when:** Empty, one-item, and multi-item inputs work without unchecked indexing.
+
+**Stretch:** Produce a view sorted from highest to lowest amount while preserving the original vector order.
 
 ## Challenge 017 — Word statistics
 
-**Mini brief:** A study tool reads a sentence and reports its word count, longest word, and average word length.
+**Challenge:** Compute text statistics safely without byte indexing or division by zero.
 
-**Practice:** `&str`, `String`, slices, Unicode caveats, and iterators over text.
+**Your task:** Write a function that accepts `&str` and returns the word count, longest word, and average word length. Split words with `split_whitespace`.
 
-**Requirements:** Accept a `&str`, split on whitespace, and compute the requested statistics. Return an explicit empty-input result rather than dividing by zero. Do not assume a string can be indexed like a byte array of characters.
+**Example input:** `"Rust makes systems safer"`.
 
-**Done when:** Multiple spaces and empty input behave sensibly.
+**Expected result:**
 
-**Stretch:** Count Unicode scalar values in each word and document how that differs from user-perceived grapheme clusters.
+```text
+Words: 4
+Longest: systems
+Average length: 5.25
+```
+
+Lengths in the base challenge are UTF-8 byte lengths. For equal longest words, keep the first.
+
+**Requirements:** Multiple spaces must not create empty words. Empty input must return an explicit no-statistics result rather than dividing by zero.
+
+**Done when:** The example, repeated whitespace, and empty input all have defined results.
+
+**Stretch:** Count Unicode scalar values instead of bytes and explain how grapheme clusters can still differ.
 
 ## Challenge 018 — Frequency table
 
-**Mini brief:** Count how often each word appears in a short passage and display the most frequent words first.
+**Challenge:** Count normalized words, then sort a map's entries into deterministic report order.
 
-**Practice:** `HashMap`, owned keys, entry APIs, and sorting borrowed map entries for display.
+**Your task:** Lowercase each whitespace-separated word, count it in a `HashMap<String, usize>`, and print entries by descending count. Break ties alphabetically.
 
-**Requirements:** Normalize words to lowercase, count them, and print a stable descending frequency report. Keep tie ordering deterministic.
+**Example input:** `"Rust is fast and rust is safe"`.
 
-**Done when:** Repeated words count correctly and equal-frequency output is predictable.
+**Expected output:**
 
-**Stretch:** Ignore punctuation without losing apostrophes inside contractions.
+```text
+is: 2
+rust: 2
+and: 1
+fast: 1
+safe: 1
+```
+
+**Requirements:** Use the entry API for counting. Do not rely on `HashMap` iteration order. Sorting a separate vector of borrowed entries is acceptable.
+
+**Done when:** Repeated words are counted case-insensitively and equal counts always print in the same order.
+
+**Stretch:** Strip surrounding punctuation while preserving apostrophes inside words such as `don't`.

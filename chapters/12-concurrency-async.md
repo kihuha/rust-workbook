@@ -2,36 +2,67 @@
 
 ## Challenge 034 — Parallel word counts
 
-**Mini brief:** A log analyzer should split independent text chunks across threads and combine word counts.
+**Challenge:** Move independent text chunks to worker threads and merge their results without sharing one mutable map.
 
-**Practice:** Threads, ownership transfer, `move`, and message passing.
+**Your task:** Spawn one worker per chunk. Each worker builds its own word-frequency map and sends it through a channel. The main thread merges all maps and joins every worker.
 
-**Requirements:** Spawn a worker per chunk, send each result back to the main thread through a channel, and combine counts. Join workers and handle possible failures.
+**Example chunks:** `['rust is fast', 'rust is safe', 'safe systems']`.
 
-**Done when:** No shared mutable map is required and the final counts match a single-threaded check.
+**Expected final counts:**
 
-**Stretch:** Benchmark different chunk counts on a sufficiently large generated input.
+```text
+fast: 1
+is: 2
+rust: 2
+safe: 2
+systems: 1
+```
+
+**Requirements:** Normalize words to lowercase. Make output order deterministic. Handle a worker panic or channel closure instead of silently losing results.
+
+**Done when:** The parallel result equals a single-threaded reference count and no shared mutable map is used.
+
+**Stretch:** Benchmark several chunk sizes on generated input large enough to make overhead visible.
 
 ## Challenge 035 — Concurrent job queue
 
-**Mini brief:** A small image service needs a fixed number of workers to process queued jobs.
+**Challenge:** A fixed-size worker pool must process every queued job and then shut down without hanging.
 
-**Practice:** `Arc`, `Mutex`, thread safety, and coordinating shared state.
+**Your task:** Start `2` worker threads and submit jobs `1..=5`. Each worker takes a job, records its ID as completed, and waits for more work until shutdown.
 
-**Requirements:** Create a bounded set of worker threads that consume jobs and report completion. Keep shared state minimal and make shutdown behavior explicit.
+**Expected result:**
 
-**Done when:** All submitted jobs are accounted for and workers exit cleanly.
+```text
+Completed job IDs: [1, 2, 3, 4, 5]
+Workers stopped: 2
+```
 
-**Stretch:** Use a channel-based queue instead of a shared mutex-protected queue and compare the design.
+Completion order may vary; sort IDs before the final assertion.
+
+**Requirements:** Use `Arc` only for truly shared ownership and protect shared mutable state with `Mutex`. Define a shutdown signal, wake blocked workers, and join them.
+
+**Done when:** Every job appears exactly once and the process exits cleanly on repeated runs.
+
+**Stretch:** Replace the mutex-protected queue with a channel-based design and compare contention and shutdown signaling.
 
 ## Challenge 036 — Async status checker
 
-**Mini brief:** A status dashboard requests several independent service checks and displays results as they finish.
+**Challenge:** Check several independent services concurrently and preserve each result even when another request fails or times out.
 
-**Practice:** Futures, `async`/`await`, and choosing an async runtime.
+**Your task:** Use an async runtime and HTTP client to check at least three configurable URLs. Return a status record containing the service name, outcome, and elapsed time.
 
-**Requirements:** Use a runtime and HTTP client crate to run at least three checks concurrently. Handle timeout and request errors per service so one failure does not discard all results.
+**Example final report:**
 
-**Done when:** Results are gathered concurrently and each service reports success or its own error.
+```text
+api: 200 OK
+search: timeout
+billing: request error
+```
 
-**Stretch:** Add a cancellation deadline for the entire dashboard refresh.
+Actual order may follow completion order, but tests should use a local mock server rather than public endpoints.
+
+**Requirements:** Start checks before awaiting all results. Apply a per-service timeout. A single failure must not cancel or discard the other records.
+
+**Done when:** Three delayed mock responses complete in roughly the longest individual delay, not the sum of all delays.
+
+**Stretch:** Add one deadline for the whole dashboard refresh and mark unfinished checks as cancelled.

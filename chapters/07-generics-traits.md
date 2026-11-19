@@ -2,36 +2,63 @@
 
 ## Challenge 019 — Reusable bounds checker
 
-**Mini brief:** A sensor dashboard needs a helper that checks whether a value falls within an inclusive range.
+**Challenge:** One range-checking algorithm should work for several ordered types without requiring traits it does not use.
 
-**Practice:** Generic functions and trait bounds.
+**Your task:** Implement `within<T>(value: T, min: T, max: T) -> bool`. The range is inclusive.
 
-**Requirements:** Write a generic `within` helper for ordered, copyable values. Use it with integers and floating-point values. Keep the bound as small as the implementation permits.
+**Example calls:**
 
-**Done when:** Both types work and you can explain why the chosen traits are needed.
+```text
+within(7, 1, 10)       -> true
+within(10, 1, 10)      -> true
+within(12, 1, 10)      -> false
+within(3.5, 2.0, 4.0)  -> true
+```
 
-**Stretch:** Add a test with a custom type that implements the required ordering traits.
+**Requirements:** Choose the smallest useful trait bounds. If your implementation does not copy values, do not add `Copy` merely for convenience. Document behavior when `min > max`.
+
+**Done when:** Integer and floating-point examples work and every trait bound can be justified from an operation in the function body.
+
+**Stretch:** Define a custom ordered type and use it with `within`.
 
 ## Challenge 020 — Printable report items
 
-**Mini brief:** A reporting tool accepts several kinds of values and produces a consistent one-line description for each.
+**Challenge:** Deposits and withdrawals contain different data but must participate in one reporting API.
 
-**Practice:** Defining a trait, implementing it for multiple structs, and using trait bounds.
+**Your task:** Define `ReportLine` with `report_line(&self) -> String`. Implement it for `Deposit` and `Withdrawal`, then write a generic `print_report<T: ReportLine>` function.
 
-**Requirements:** Define a `ReportLine` trait and implement it for a `Deposit` and a `Withdrawal`. Write a generic function that prints any reportable value.
+**Example values and output:**
 
-**Done when:** The shared function works for both types without knowing their concrete fields.
+```text
+Deposit { source: "Salary", cents: 250000 }
+-> "Deposit from Salary: +250000 cents"
 
-**Stretch:** Add a generic vector printer that accepts a slice of any `ReportLine` type.
+Withdrawal { category: "Rent", cents: 80000 }
+-> "Withdrawal for Rent: -80000 cents"
+```
+
+**Requirements:** The generic printer may use only the trait API, not the concrete fields. Both implementations must borrow their value.
+
+**Done when:** The same print function accepts both types and produces the expected lines.
+
+**Stretch:** Write a generic function that prints a slice containing one concrete `ReportLine` type, then compare it with a heterogeneous `Vec<Box<dyn ReportLine>>`.
 
 ## Challenge 021 — Configurable statistics
 
-**Mini brief:** A data tool computes a statistic over a list of values; callers choose the rule used to combine them.
+**Challenge:** Share the traversal of a list while allowing callers to choose how values are combined.
 
-**Practice:** Generic types and trait-based abstractions, with a focus on useful API boundaries.
+**Your task:** Define a `Metric` trait with a combine operation. Implement `Sum` and `Maximum` for `i32`, then write one function that evaluates any metric over a slice.
 
-**Requirements:** Create a small `Metric` trait with an operation for combining two values. Implement sum and maximum metrics for integer input. Make a function consume a slice and return an optional result for empty input.
+**Example results:**
 
-**Done when:** The algorithm is shared and each metric defines only its combining behavior.
+```text
+values [3, 8, 2, 5], Sum     -> Some(18)
+values [3, 8, 2, 5], Maximum -> Some(8)
+values [], any metric         -> None
+```
 
-**Stretch:** Compare the trait approach with a closure parameter after studying closures.
+**Requirements:** The shared algorithm must not contain metric-specific branches. Each metric implementation should define only its combination rule.
+
+**Done when:** Both metrics reuse the same traversal and empty input has an explicit result.
+
+**Stretch:** Replace the trait value with a closure parameter and compare the call sites.

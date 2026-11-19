@@ -2,36 +2,59 @@
 
 ## Challenge 031 — Shared document outline
 
-**Mini brief:** Several UI panels need to refer to the same immutable document outline.
+**Challenge:** Several panels need shared ownership of one immutable outline without duplicating its contents.
 
-**Practice:** `Rc<T>` for shared ownership in a single-threaded program.
+**Your task:** Store a `DocumentOutline` in `Rc<T>`. Give an `Rc` clone to navigation and search panels, then drop owners while recording `Rc::strong_count`.
 
-**Requirements:** Store the outline in an `Rc`, give clones to several panels, and observe the strong reference count as owners are added and dropped.
+**Expected count sequence:**
 
-**Done when:** You can explain why cloning the `Rc` is different from cloning the underlying outline.
+```text
+document only: 1
+document + navigation: 2
+document + navigation + search: 3
+after search is dropped: 2
+```
 
-**Stretch:** Add a `Weak` back-reference and show that it does not keep the outline alive.
+**Requirements:** Print the same outline title through each owner. Do not clone the `DocumentOutline` itself.
+
+**Done when:** The counts match and you can explain that `Rc::clone` increments shared ownership rather than copying the stored value.
+
+**Stretch:** Give a panel a `Weak<DocumentOutline>` reference and show that `upgrade()` returns `None` after all strong owners are dropped.
 
 ## Challenge 032 — Shared visit counter
 
-**Mini brief:** Multiple components in a single-threaded simulation update a shared count of viewed pages.
+**Challenge:** Multiple single-threaded components must mutate one shared counter even though they hold shared owners.
 
-**Practice:** `RefCell<T>`, runtime borrow checking, and interior mutability.
+**Your task:** Share `Rc<RefCell<u32>>` between two components. Let one add `2` visits and the other add `3`, then read the final count.
 
-**Requirements:** Share a counter through `Rc<RefCell<u32>>`, update it from two components, and read the final value. In a separate experiment, trigger an overlapping mutable borrow and record the runtime behavior.
+**Expected output:**
 
-**Done when:** You can explain when `RefCell` moves borrow checking from compile time to runtime.
+```text
+Final visits: 5
+```
 
-**Stretch:** Replace the counter with a design that avoids interior mutability and compare it.
+**Requirements:** Keep each `borrow_mut` scope as short as possible. In a separate test marked `#[should_panic]`, hold one mutable borrow and request another to observe runtime enforcement.
+
+**Done when:** Normal updates succeed and you can explain why overlapping mutable borrows compile but panic at runtime with `RefCell`.
+
+**Stretch:** Redesign the example so one owner coordinates updates through ordinary `&mut` access, then compare the APIs.
 
 ## Challenge 033 — Shared tree nodes
 
-**Mini brief:** Build a small family tree where a child can refer back to a parent without creating a reference-counting cycle.
+**Challenge:** A child should navigate to its parent without creating an `Rc` cycle that leaks the tree.
 
-**Practice:** Combining `Rc`, `RefCell`, and `Weak`.
+**Your task:** Define a node with owned `Rc` children and a `Weak` parent stored behind `RefCell`. Build `Grandparent -> Parent -> Child` and traverse both directions.
 
-**Requirements:** Model parent-to-child ownership and a weak child-to-parent link. Demonstrate that dropping the root allows the tree nodes to be released.
+**Expected ownership behavior:**
 
-**Done when:** The structure can be traversed in both directions while parent links do not keep the whole tree alive.
+```text
+child.parent.upgrade() -> Some(parent)
+after all strong parent owners are dropped:
+child.parent.upgrade() -> None
+```
 
-**Stretch:** Track a simple drop notification to observe destruction order.
+**Requirements:** Parent-to-child links must be strong; child-to-parent links must be weak. Print relevant strong and weak counts before and after dropping the root.
+
+**Done when:** Bidirectional navigation works while weak parent links do not keep ancestors alive.
+
+**Stretch:** Implement `Drop` for the node and record destruction order.

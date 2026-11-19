@@ -2,36 +2,69 @@
 
 ## Challenge 001 — Receipt calculator
 
-**Mini brief:** A market stall needs a command-line receipt for a few fixed items. Build a small program that stores a shop name, item names, quantities, and unit prices, then prints a readable total.
+**Challenge:** A market stall needs a receipt, but passing its `String` data into helper functions may move it. Build the receipt while deciding which values should move, copy, or be borrowed.
 
-**Practice:** Scalar types, `String`, assignment, formatting, and the difference between `Copy` values and moved `String` values.
+**Your task:** Store a shop name and several `(item, quantity, unit_price_cents)` entries. Write a helper that formats the header, then print every line item, the total, and a closing message that reuses the shop name.
 
-**Requirements:** Make a helper that formats a receipt header from a shop name. Call it, then decide whether the name can still be used afterward. Resolve any ownership issue deliberately and explain why your fix works.
+**Requirements:** Use integer cents for money. Make at least one helper accept owned data, observe what becomes unavailable, and then choose a deliberate fix. Explain why numeric values copy while `String` values normally move.
 
-**Done when:** The output includes each line item and a total, and your notes identify which values copied and which moved.
+**Example input:** Shop `Green Basket`; apples: `2 × 150` cents; bread: `1 × 250` cents.
 
-**Stretch:** Reuse the shop name in a closing message without cloning unless there is a good reason.
+**Expected output:**
+
+```text
+Green Basket
+2 x Apples @ 150 = 300 cents
+1 x Bread @ 250 = 250 cents
+Total: 550 cents
+Thank you for shopping at Green Basket
+```
+
+Minor spacing may differ, but the values must match.
+
+**Done when:** The receipt is correct, the shop name is usable in the closing line, and you can identify every move, copy, borrow, or clone in the program.
+
+**Stretch:** Complete the program without cloning the shop name. Then write one sentence explaining when cloning it would still be reasonable.
 
 ## Challenge 002 — Contact card handoff
 
-**Mini brief:** A tiny contact-card tool accepts a person's name and email, then hands the card to a formatter that returns one display string.
+**Challenge:** A formatter takes ownership of contact data, yet the caller still needs the email afterward. Design the ownership handoff explicitly instead of adding clones by habit.
 
-**Practice:** Moving owned values into functions, returning ownership, and choosing when a clone is justified.
+**Your task:** Implement `format_contact(name: String, email: String) -> String`. Call it from `main`, print the card, and then print a follow-up message containing the original email.
 
-**Requirements:** Implement `format_contact(name: String, email: String) -> String`. In `main`, try using both inputs after the call. Refactor so the program can print the formatted card and still retain the email for a follow-up line, making the ownership choice explicit.
+**Requirements:** First call the function with the owned strings and observe the compiler error when reusing `email`. Refactor with either a deliberate clone, borrowing, or returning ownership. Explain the tradeoff you chose.
 
-**Done when:** It prints both lines and you can describe where the owned strings move.
+**Example input:** Name `Amina Njeri`, email `amina@example.com`.
 
-**Stretch:** Compare a clone-based solution with a solution that returns the original data in a tuple.
+**Expected output:**
+
+```text
+Amina Njeri <amina@example.com>
+Follow-up will be sent to amina@example.com
+```
+
+**Done when:** Both lines print and you can trace who owns `name`, `email`, and the formatted result before and after the call.
+
+**Stretch:** Implement two versions: one that clones and one that returns the email with the formatted card. Compare their APIs and allocation costs.
 
 ## Challenge 003 — Playlist snapshot
 
-**Mini brief:** A music app keeps a short playlist and needs a separately editable snapshot for a “queue preview.”
+**Challenge:** A queue preview must be edited independently of the original playlist. Decide when moving a collection is enough and when a deep clone is actually required.
 
-**Practice:** `Vec<String>`, moves of collections, and deep cloning when independent data is required.
+**Your task:** Create a `Vec<String>` playlist. Pass it to a length-reporting helper, revise the design so the caller retains the list, then create an editable snapshot and change only the snapshot.
 
-**Requirements:** Create a playlist, transfer it to a function that reports its length, then revise the design so the caller can keep using the playlist. Make a separate snapshot, edit one list, and show that the other remains unchanged.
+**Requirements:** Show the ownership error caused by consuming the vector. Fix the reporting call without cloning the full list. Clone only when creating the independent snapshot.
 
-**Done when:** The output demonstrates independent edits, and your notes say what `clone` copies here.
+**Example input:** Original playlist `['Intro', 'Rustacean', 'Finale']`; remove `Intro` from the preview and add `Encore`.
 
-**Stretch:** Add a helper that consumes a playlist and returns only its first track, handling an empty playlist.
+**Expected output:**
+
+```text
+Track count: 3
+Original: ["Intro", "Rustacean", "Finale"]
+Preview: ["Rustacean", "Finale", "Encore"]
+```
+
+**Done when:** Editing the preview does not change the original, and you can explain that cloning `Vec<String>` also clones each owned string.
+
+**Stretch:** Write a helper that consumes a playlist and returns its first track as `Option<String>`.

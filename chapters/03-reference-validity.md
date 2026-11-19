@@ -2,36 +2,61 @@
 
 ## Challenge 007 — Borrow timeline notebook
 
-**Mini brief:** A teammate keeps getting borrow-checker errors while updating a score. Build a tiny program and annotate when each reference is actually used.
+**Challenge:** A score update succeeds or fails depending on the last use of a reference, not just the braces around it. Make that borrow timeline visible.
 
-**Practice:** Reference validity and non-lexical lifetimes (NLL).
+**Your task:** Start with `score = 70`. Borrow it as `current`, print through the reference, add `5` to the owner, and print the owner.
 
-**Requirements:** Start with an integer score. Create an immutable reference, print through it, then update the score and print the owner. Add a second immutable reference used later. For each version, draw a simple owner/reference timeline and explain whether the update is allowed.
+**Requirements:** Then create a second version that uses `current` again after the update. Predict whether each version compiles before checking. Draw a timeline marking creation, last use, mutation, and scope end.
 
-**Done when:** You can explain why a borrow can end at its last use even if its lexical scope continues.
+**Expected output for the valid version:**
 
-**Stretch:** Put the read-only work in an inner block and compare the timeline with NLL.
+```text
+Before: 70
+After: 75
+```
+
+The invalid version should demonstrate that mutation cannot overlap a later use of the immutable borrow.
+
+**Done when:** You can explain why non-lexical lifetimes let a borrow end at its last use.
+
+**Stretch:** Put the borrow in an inner block and compare the explicit block boundary with the last-use boundary inferred by Rust.
 
 ## Challenge 008 — Safe first word
 
-**Mini brief:** A log viewer needs to display the first word of a line without copying the entire line.
+**Challenge:** Return a view into a log line without copying it, while ensuring that view never outlives its source.
 
-**Practice:** String slices as borrowed views and keeping a reference tied to valid source data.
+**Your task:** Implement `first_word(line: &str) -> &str`. Return the text before the first ASCII space, or the entire input if no space exists.
 
-**Requirements:** Implement `first_word(line: &str) -> &str`. Return the prefix before the first space, or the whole input when there is no space. Keep the source string alive while using the result.
+**Example inputs and outputs:**
 
-**Done when:** Empty input, one-word input, and multi-word input work, and you can point to the data the returned slice refers to.
+```text
+"error disk full" -> "error"
+"ready"           -> "ready"
+""                -> ""
+" two"            -> ""
+```
 
-**Stretch:** Add punctuation as a delimiter while keeping the function Unicode-safe at character boundaries.
+**Requirements:** Test all four cases. Keep the source `String` alive while printing the returned slice. Add a commented failing example that tries to keep the slice after its source is dropped.
+
+**Done when:** No new `String` is allocated for the result, and you can identify the byte range in the source that the slice refers to.
+
+**Stretch:** Treat whitespace and punctuation as delimiters without slicing in the middle of a UTF-8 character.
 
 ## Challenge 009 — Edit after inspection
 
-**Mini brief:** A note editor previews a note, then appends a status marker after the preview is finished.
+**Challenge:** A note can be mutated after a preview borrow's last use, but not while that preview is still needed.
 
-**Practice:** The end of immutable borrows, mutation after last use, and scoping references clearly.
+**Your task:** Create `note = "Draft report"`. Borrow a preview, print it, append `" [saved]"` to the owner, and print the final note.
 
-**Requirements:** Borrow a `String` to compute and print a preview. After its final use, append `" [saved]"` to the original. Then make a second version where the preview is used after the append attempt; use the compiler result to explain the difference.
+**Expected output:**
 
-**Done when:** Both versions make the borrow timeline visible and compile behavior is explained in your own words.
+```text
+Preview: Draft report
+Saved: Draft report [saved]
+```
 
-**Stretch:** Refactor the preview into a helper that returns an owned short summary, then compare tradeoffs.
+**Requirements:** Make a second version that tries to print the preview after appending. Record why it fails, then restore compiling code. Mark the borrow's last use in both timelines.
+
+**Done when:** The valid version compiles and your explanation connects the mutation rule to the preview's actual last use.
+
+**Stretch:** Move preview creation into a helper that returns an owned summary. Explain why the returned summary no longer borrows the note.

@@ -2,36 +2,70 @@
 
 ## Challenge 022 — Validated deposit
 
-**Mini brief:** A banking terminal accepts a deposit amount as text and must distinguish malformed input from a non-positive amount.
+**Challenge:** A deposit can fail because the text is not a number or because the parsed amount violates a business rule. Preserve that distinction.
 
-**Practice:** `Result`, custom error enums, and parsing.
+**Your task:** Implement `parse_deposit(input: &str) -> Result<u64, DepositError>`. Parse whole cents and reject zero and negative values.
 
-**Requirements:** Parse a whole number of cents, reject zero and negative values, and return descriptive errors. Keep input acquisition separate from validation.
+**Example results:**
 
-**Done when:** Valid input produces a deposit amount and each invalid category yields a distinct message.
+```text
+"2500" -> Ok(2500)
+"abc"  -> Err(InvalidNumber)
+"0"    -> Err(NonPositive)
+"-50"  -> Err(NonPositive)
+```
 
-**Stretch:** Implement `Display` for the custom error.
+Leading and trailing whitespace may be accepted after trimming.
+
+**Requirements:** Use a custom error enum with distinct variants. Keep terminal input outside the parser so the function can be tested directly.
+
+**Done when:** Every example produces the documented category and valid data is returned as cents.
+
+**Stretch:** Implement `Display` and `Error` for `DepositError`.
 
 ## Challenge 023 — CSV expense loader
 
-**Mini brief:** Load a small comma-separated expense file and report which row failed if its amount is invalid.
+**Challenge:** A loader must distinguish file failures from malformed rows and report exactly where bad data occurred.
 
-**Practice:** File I/O, `?`, error propagation, and adding context to failures.
+**Your task:** Read a file whose non-empty lines use `description,amount_cents`. Return `Vec<Expense>` or an error containing useful context.
 
-**Requirements:** Read each line as `description,amount_cents`. Return a collection on success, or an error that identifies the line number and underlying problem. Handle a missing file cleanly.
+**Example file:**
 
-**Done when:** Valid rows load, malformed rows identify their location, and no `unwrap` is used for expected failures.
+```text
+Bus,150
+Lunch,800
+Books,not-a-number
+```
 
-**Stretch:** Support descriptions containing commas by choosing and documenting a simple quoting rule or a CSV crate.
+**Expected error:**
+
+```text
+line 3: invalid amount "not-a-number"
+```
+
+**Requirements:** Reject missing descriptions, missing amounts, extra fields, and invalid numbers. Report line numbers starting at 1. Represent a missing file separately. Do not `unwrap` expected failures.
+
+**Done when:** A valid file loads all rows and every malformed row identifies its location.
+
+**Stretch:** Support quoted descriptions containing commas by documenting a rule or adopting a CSV crate.
 
 ## Challenge 024 — Safe calculator
 
-**Mini brief:** A command-line calculator supports addition, subtraction, multiplication, and integer division.
+**Challenge:** Parse and evaluate an arithmetic request without panicking on bad input, zero division, or overflow.
 
-**Practice:** `Option`/`Result`, division-by-zero handling, and clear error types.
+**Your task:** Implement `calculate(left: &str, operator: &str, right: &str) -> Result<i64, CalcError>` for `+`, `-`, `*`, and `/`.
 
-**Requirements:** Parse two signed integers and an operator. Report malformed operands, unknown operators, and division by zero distinctly. Use checked arithmetic for overflow.
+**Example results:**
 
-**Done when:** Every failure path returns a useful error instead of panicking.
+```text
+calculate("12", "+", "8") -> Ok(20)
+calculate("9", "/", "0")  -> Err(DivisionByZero)
+calculate("x", "+", "2")  -> Err(InvalidLeftOperand)
+calculate("4", "%", "2")  -> Err(UnknownOperator)
+```
 
-**Stretch:** Add remainder and document behavior for negative operands.
+**Requirements:** Distinguish invalid left and right operands. Use checked arithmetic, including checked division for `i64::MIN / -1`.
+
+**Done when:** Each operator works and every failure path returns a specific error.
+
+**Stretch:** Add remainder and document the result for negative operands.

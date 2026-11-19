@@ -1,39 +1,62 @@
 # Chapter 4 — Lifetime relationships
 
-These briefs focus first on whether references remain valid. They do not require explicit lifetime annotations; introduce signature annotations only when borrowing and validity feel comfortable.
+These challenges focus on whether references remain valid. Add explicit lifetime syntax only where the compiler requires a relationship to be named.
 
-## Challenge 010 — Choose the longer-lived input
+## Challenge 010 — Choose the longer label
 
-**Mini brief:** A report helper receives a title and a subtitle and should return one of them as a borrowed label.
+**Challenge:** A helper returns one of two borrowed strings. Rust needs to know how the returned reference is related to both inputs.
 
-**Practice:** Reasoning about multiple input references and why a returned reference must point to valid data.
+**Your task:** Implement `longer_label` so it returns the input with the greater character count. If the counts are equal, return the first input.
 
-**Requirements:** Sketch a function that returns the longer label by character count. Before coding, write down what must be true about both input values while the returned label is used. Implement it with Rust's required signature syntax, then test which inputs can outlive the result.
+**Example inputs and outputs:**
 
-**Done when:** You can explain why the result cannot refer to a temporary local string created inside the function.
+```text
+("Rust", "Ownership") -> "Ownership"
+("book", "page")      -> "book"
+```
 
-**Stretch:** Return an owned `String` instead and compare the caller's obligations.
+**Requirements:** Write down what must stay alive while the result is used. Add the lifetime annotations Rust requires. Do not create a local `String` and return a reference to it.
+
+**Done when:** Both cases work and you can explain why the result may not outlive either input lifetime described by the signature.
+
+**Stretch:** Return an owned `String` instead and compare its allocation cost with the caller's simpler lifetime obligations.
 
 ## Challenge 011 — Catalog search result
 
-**Mini brief:** A catalog has a list of borrowed book titles. A search should return a matching title without allocating a new string.
+**Challenge:** Search a collection and return the original matching title without allocating a duplicate.
 
-**Practice:** Lifetimes of collection elements and returned slices/references.
+**Your task:** Store titles in `Vec<String>` and implement a prefix search that returns `Option<&str>` borrowed from the catalog.
 
-**Requirements:** Store titles in a `Vec<String>`. Search by prefix and return a borrowed match if one exists. Keep the catalog alive while displaying the result; then reorganize the scopes and identify which arrangement is invalid.
+**Example catalog:** `['The Rust Book', 'Rust in Action', 'Programming Rust']`.
 
-**Done when:** The successful lookup borrows from the catalog and the missing case is represented safely.
+**Example results:**
 
-**Stretch:** Make the lookup case-insensitive while still returning the original title.
+```text
+prefix "Rust"   -> Some("Rust in Action")
+prefix "Python" -> None
+```
+
+**Requirements:** Return the first match. Keep the catalog alive while using the result. Add a commented invalid scope arrangement in which the result would outlive the catalog.
+
+**Done when:** Found and missing cases work, and the successful result points into the existing catalog data.
+
+**Stretch:** Match prefixes case-insensitively while still returning the title with its original spelling.
 
 ## Challenge 012 — Borrow or own?
 
-**Mini brief:** A command parser receives either a word already present in the input line or a generated default command.
+**Challenge:** A parsed command may borrow a token from the input, but an empty input needs a generated default. One result type must safely represent both sources.
 
-**Practice:** Choosing between borrowed and owned results when data may come from different places.
+**Your task:** Implement `command(input: &str)` using either an owned `String`, `Cow<'_, str>`, or a small enum with `Borrowed(&str)` and `Owned(String)` variants.
 
-**Requirements:** Parse the first token from an input line. If it is absent, use a default command. Design the result so both cases can be represented without returning a reference to a local temporary. Describe the ownership and lifetime tradeoff before implementing.
+**Example inputs and outputs:**
 
-**Done when:** Empty and non-empty input both work without dangling references.
+```text
+"list files" -> "list"
+"   "        -> "help"
+```
 
-**Stretch:** Try `Cow<'a, str>` after you have studied its purpose; explain when it avoids allocation.
+**Requirements:** The non-empty result should use the first whitespace-separated token. The default must not return a reference to a temporary local `String`. Explain the ownership cost of your chosen result type.
+
+**Done when:** Both cases work without a dangling reference and the caller can print the result safely.
+
+**Stretch:** Implement the `Cow<'a, str>` version so non-empty input is borrowed and the generated default is owned.
