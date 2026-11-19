@@ -55,3 +55,7 @@ From Chapter 11 onward, and in every project brief, tests are separated into uni
 - [Easy projects](projects/easy/README.md)
 - [Medium projects](projects/medium/README.md)
 - [Hard projects](projects/hard/README.md)
+
+## Real-world usage
+
+The [real-world Rust challenges](real-world-usage/README.md) cover 10 production domains with company context, interfaces, operational constraints, test plans, deployment targets, and acceptance criteria.
