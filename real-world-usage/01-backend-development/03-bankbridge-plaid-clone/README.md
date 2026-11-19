@@ -22,6 +22,8 @@ By completing this project you will practice:
 
 Study [ownership](https://rust-book.cs.brown.edu/ch04-00-understanding-ownership.html), [modules](https://rust-book.cs.brown.edu/ch07-00-managing-growing-projects-with-packages-crates-and-modules.html), [error handling](https://rust-book.cs.brown.edu/ch09-00-error-handling.html), [traits](https://rust-book.cs.brown.edu/ch10-02-traits.html), [testing](https://rust-book.cs.brown.edu/ch11-00-testing.html), [concurrency](https://rust-book.cs.brown.edu/ch16-00-concurrency.html), and [async programming](https://rust-book.cs.brown.edu/ch17-00-async-await.html).
 
+Complete the [backend framework prerequisite track](../00-prerequisite/README.md) before starting this project.
+
 ## Actors and tenancy
 
 - **Client application** is a BankBridge customer with server-side credentials.
@@ -154,9 +156,25 @@ Use a virtual clock or injectable time source so refresh, expiry, and backoff te
 - Require audited, time-limited support access; do not build a general-purpose “view user data” admin page.
 - Write a threat model covering token theft, cross-tenant access, OAuth mix-up, replay, malicious institutions, and compromised workers.
 
-## Suggested architecture
+## Required implementation stack
 
-Use a Cargo workspace with `bankbridge-domain`, `bankbridge-api`, `bankbridge-store`, `bankbridge-connectors`, `bankbridge-worker`, `bankbridge-webhook`, and `bankbridge-sandbox`. Axum, Tokio, Serde, SQLx, PostgreSQL, `tracing`, and OpenTelemetry are suitable choices. Keep normalized domain types separate from provider DTOs.
+| Concern | Required choice | How BankBridge uses it |
+| --- | --- | --- |
+| Async runtime | Tokio | API serving, connector jobs, bounded scheduling, cancellation, timeouts, and shutdown |
+| HTTP API | Axum and Serde | Client API, hosted link callbacks, typed extractors, stable errors, and shared state |
+| Middleware | Tower, `tower-http`, and `tower-governor` | Request IDs, tracing, limits, timeouts, load control, and quotas by client/institution |
+| Database | PostgreSQL, SeaORM, and SQLx | SeaORM for clients/items/accounts/consent relationships; SQLx for explicit sync, cursor, locking, and outbox transactions |
+| Authentication | `tower-sessions`, `axum-login`, `jsonwebtoken`, and Argon2 | Hosted-link/operator sessions, constrained bearer validation, and operator password hashing; client access tokens remain opaque hashed credentials |
+| Outbound HTTP | Reqwest | OAuth and institution connectors with explicit timeouts, proxy policy, bounded responses, and controlled redirects |
+| Validation and secrets | `validator` and `secrecy` | Boundary validation and redaction of client, OAuth, institution, and encryption credentials |
+| Observability | `tracing`, OpenTelemetry, `metrics`, and Prometheus exporter | Cross-service trace context and low-cardinality API/connector/sync metrics |
+| Tests | Tower `ServiceExt`, Reqwest, and Wiremock | In-process API tests, complete OAuth flows, and deterministic institution failures |
+
+SeaORM must not hide the hard synchronization invariants. Use explicit SQLx transactions where a sync run must atomically publish changes and advance a cursor, where token versions require compare-and-swap, or where workers require row locks. Record the reason at each escape hatch.
+
+## Architecture
+
+Use a Cargo workspace with `bankbridge-domain`, `bankbridge-api`, `bankbridge-store`, `bankbridge-connectors`, `bankbridge-worker`, `bankbridge-webhook`, and `bankbridge-sandbox`. Keep normalized domain types separate from Axum extractors, SeaORM entities, SQLx rows, and provider DTOs.
 
 PostgreSQL is authoritative for items, consent, normalized data, sync runs, jobs, and an outbox. Run API and workers separately. A queue may wake workers, but correctness must survive lost or duplicate queue messages.
 

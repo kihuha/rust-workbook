@@ -4,11 +4,11 @@
 
 SwiftCart is a fictional regional e-commerce marketplace. Its checkout system needs an order service that accepts purchases, reserves stock, records payment state, and exposes fulfillment updates to merchants.
 
-Build a production-ready REST API named `swiftcart-orders`. The service must support multiple merchants without allowing one merchant to read or mutate another merchant’s data.
+Build a production-minded REST API named `swiftcart-orders`. The service must support multiple merchants without allowing one merchant to read or mutate another merchant’s data. This is the deliberate bare-bones project: implement the networking and HTTP boundary yourself so you understand the work later frameworks perform.
 
 ## Brown Rust Book prerequisites
 
-Study [modules and public APIs](https://rust-book.cs.brown.edu/ch07-00-managing-growing-projects-with-packages-crates-and-modules.html), [error handling](https://rust-book.cs.brown.edu/ch09-00-error-handling.html), [traits](https://rust-book.cs.brown.edu/ch10-02-traits.html), [tests](https://rust-book.cs.brown.edu/ch11-00-testing.html), [iterators](https://rust-book.cs.brown.edu/ch13-02-iterators.html), and [async programming](https://rust-book.cs.brown.edu/ch17-00-async-await.html).
+Study [modules and public APIs](https://rust-book.cs.brown.edu/ch07-00-managing-growing-projects-with-packages-crates-and-modules.html), [error handling](https://rust-book.cs.brown.edu/ch09-00-error-handling.html), [traits](https://rust-book.cs.brown.edu/ch10-02-traits.html), [tests](https://rust-book.cs.brown.edu/ch11-00-testing.html), [iterators](https://rust-book.cs.brown.edu/ch13-02-iterators.html), [concurrency](https://rust-book.cs.brown.edu/ch16-00-concurrency.html), and the [standard-library web server project](https://rust-book.cs.brown.edu/ch21-00-final-project-a-web-server.html).
 
 ## Users and actors
 
@@ -76,7 +76,18 @@ Content-Type: application/json
 
 ## Architecture expectations
 
-Use thin HTTP handlers around an application service. Put order rules in a domain module, persistence behind repository traits, and external publication behind an outbox worker. Apply database migrations automatically in a controlled deployment step.
+### Required bare-bones stack
+
+- Use `std::net::TcpListener` and `TcpStream`; do not use Tokio or another async runtime.
+- Use a bounded standard-library thread pool and bounded work queue; do not create one unbounded thread per connection.
+- Parse the required subset of HTTP/1.1 yourself. Do not use Axum, Hyper, Actix Web, Rocket, Tower, or another HTTP/server framework.
+- Implement request-line/header parsing, `Content-Length` framing, body limits, timeouts, keep-alive policy, response serialization, and connection closure deliberately.
+- You may use focused libraries for JSON, identifiers, cryptography, and the synchronous `postgres` driver. Do not use SQLx, SeaORM, Diesel, or another database framework in this project; persistence calls must remain visibly blocking and stay off connection-handling critical sections.
+- Terminate TLS at a reverse proxy for this exercise. Do not invent cryptography or deploy the educational parser directly to the public internet.
+
+Keep transport parsing separate from routing, application services, domain rules, and repository traits. Put external publication behind an outbox worker. Apply database migrations in a controlled deployment step. Document exactly which HTTP/1.1 features are supported and return bounded errors for unsupported transfer encodings, malformed headers, slow bodies, and oversized requests.
+
+The goal is not to recreate a general-purpose web framework. The goal is to experience protocol framing, bounded concurrency, backpressure, connection cleanup, and graceful shutdown once before relying on the [framework prerequisite track](../00-prerequisite/README.md) for later projects.
 
 ## Security and privacy
 
@@ -117,6 +128,9 @@ Use thin HTTP handlers around an application service. Put order rules in a domai
 - `T11` — Kill the process after committing an outbox event and verify publication resumes after restart.
 - `T12` — Run a load test at the agreed target and verify p95 latency and error-budget limits.
 - `T13` — Send malformed, oversized, and unauthorized requests and verify bounded safe failures.
+- `T14` — Split request headers and bodies across arbitrary TCP reads and still parse valid requests correctly.
+- `T15` — Slow or incomplete clients time out without exhausting the bounded worker pool.
+- `T16` — Graceful shutdown stops accepting connections, drains in-flight work to a deadline, and closes remaining sockets.
 
 ## Deployment target
 

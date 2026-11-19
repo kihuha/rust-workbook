@@ -22,6 +22,8 @@ By completing this project you will practice:
 
 Study [modules and public APIs](https://rust-book.cs.brown.edu/ch07-00-managing-growing-projects-with-packages-crates-and-modules.html), [error handling](https://rust-book.cs.brown.edu/ch09-00-error-handling.html), [traits](https://rust-book.cs.brown.edu/ch10-02-traits.html), [tests](https://rust-book.cs.brown.edu/ch11-00-testing.html), [concurrency](https://rust-book.cs.brown.edu/ch16-00-concurrency.html), and [async programming](https://rust-book.cs.brown.edu/ch17-00-async-await.html).
 
+Complete the [backend framework prerequisite track](../00-prerequisite/README.md) before starting this project.
+
 ## Actors and trust boundaries
 
 - **Merchant server** uses a secret API key to create and manage payments.
@@ -150,9 +152,25 @@ Introduce configurable latency and duplicate callbacks. Keep this simulator behi
 - Record audit events for credential changes, endpoint changes, refunds, and manual redelivery.
 - Publish a threat model and state clearly what remains outside PCI DSS scope in the educational build.
 
-## Suggested architecture
+## Required implementation stack
 
-Use a Cargo workspace with crates such as `payforge-domain`, `payforge-api`, `payforge-store`, `payforge-worker`, `payforge-processor`, and `payforge-cli`. A practical stack is Axum, Tokio, Serde, SQLx, PostgreSQL, `tracing`, and OpenTelemetry. Keep domain transitions and ledger construction independent from HTTP and SQL.
+| Concern | Required choice | How PayForge uses it |
+| --- | --- | --- |
+| Async runtime | Tokio | API serving, workers, bounded channels, cancellation, timeouts, and graceful shutdown |
+| HTTP API | Axum and Serde | Versioned routes, typed extractors, bounded JSON, stable errors, and shared application state |
+| Middleware | Tower, `tower-http`, and `tower-governor` | Request IDs, tracing, body limits, timeouts, concurrency control, keyed quotas, and safe layer ordering |
+| Database | PostgreSQL and SQLx | Migrations, compile-checked SQL, explicit transactions, row locking, idempotency, ledger, and outbox |
+| Authentication | Opaque API keys, keyed HMAC lookup hashes, and `jsonwebtoken` where short-lived identity tokens are required | Merchant/server credentials, scoped operator identity, rotation, and revocation without storing recoverable API keys |
+| Outbound HTTP | Reqwest | Processor and webhook calls with explicit connect/request timeouts and bounded bodies |
+| Validation and secrets | `validator` and `secrecy` | Boundary validation and redaction of API keys, signing secrets, and processor credentials |
+| Observability | `tracing`, OpenTelemetry, `metrics`, and Prometheus exporter | Correlated spans, replaceable trace export, low-cardinality service/worker metrics |
+| Tests | Tower `ServiceExt`, Reqwest, and Wiremock | In-process API tests, real-socket tests, and deterministic processor/webhook failures |
+
+Do not use an ORM for the ledger or idempotency paths. PayForge requires explicit SQLx transactions and visible locking/constraint behavior. A small ORM-backed admin read model is acceptable only as an optional extension.
+
+## Architecture
+
+Use a Cargo workspace with crates such as `payforge-domain`, `payforge-api`, `payforge-store`, `payforge-worker`, `payforge-processor`, and `payforge-cli`. Keep domain transitions and ledger construction independent from Axum and SQLx so they can be unit-tested without a runtime or database.
 
 Run API and worker processes separately. PostgreSQL is authoritative. An outbox table is sufficient initially; adding Kafka or NATS must not weaken transactional guarantees.
 
