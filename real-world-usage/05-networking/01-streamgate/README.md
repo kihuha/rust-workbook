@@ -1,4 +1,4 @@
-# 05 — Networking: StreamGate reverse proxy
+# 01 — Networking: StreamGate reverse proxy
 
 ## Company and service
 

@@ -1,4 +1,4 @@
-# 06 — Cybersecurity: ClearLedger secret-scanning platform
+# 01 — Cybersecurity: ClearLedger secret-scanning platform
 
 ## Company and service
 

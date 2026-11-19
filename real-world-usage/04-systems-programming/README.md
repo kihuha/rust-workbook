@@ -4,6 +4,7 @@ Production-style low-level components involving processes, operating-system inte
 
 | Project | Company scenario | Core delivery |
 | --- | --- | --- |
-| [04 — MedAxis](04-medaxis/README.md) | Hospital-device vendor | Linux service supervisor and health daemon |
+| [01 — MedAxis](01-medaxis/README.md) | Hospital-device vendor | Linux service supervisor and health daemon |
+| [02 — Minirun](02-minirun/README.md) | Developer tools company | Minimal Linux container runtime with filesystem, process, and network isolation |
 
 Add future systems briefs as sibling project directories with their own `README.md`.

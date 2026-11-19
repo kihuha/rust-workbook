@@ -1,4 +1,4 @@
-# 03 — CLI tools: ForgeRail release automation
+# 01 — CLI tools: ForgeRail release automation
 
 ## Company and service
 

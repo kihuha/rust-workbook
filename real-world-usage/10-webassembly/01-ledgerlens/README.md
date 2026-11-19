@@ -1,4 +1,4 @@
-# 10 — WebAssembly: LedgerLens browser analytics
+# 01 — WebAssembly: LedgerLens browser analytics
 
 ## Company and application
 

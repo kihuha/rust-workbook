@@ -1,4 +1,4 @@
-# 07 — Embedded systems: GreenFlow irrigation controller
+# 01 — Embedded systems: GreenFlow irrigation controller
 
 ## Company and device
 

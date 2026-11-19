@@ -13,7 +13,7 @@ These briefs simulate production work for fictional companies. Each project has 
 | 05 | [Networking](05-networking/README.md) | Layer-7 reverse proxy and load balancer |
 | 06 | [Cybersecurity](06-cybersecurity/README.md) | Enterprise secret-scanning platform |
 | 07 | [Embedded systems](07-embedded-systems/README.md) | Fault-tolerant irrigation controller |
-| 08 | [Databases](08-databases/README.md) | Embedded time-series storage engine |
+| 08 | [Databases](08-databases/README.md) | Time-series, B+ tree, and LSM storage engines |
 | 09 | [Blockchain](09-blockchain/README.md) | Supply-chain provenance registry and indexer |
 | 10 | [WebAssembly](10-webassembly/README.md) | In-browser analytics engine for large CSV files |
 
