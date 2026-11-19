@@ -33,6 +33,24 @@ Async/await, futures, semaphores, timeouts, serialization, configuration parsing
 
 Slow checks overlap, concurrency never exceeds the configured limit, one failure does not cancel other checks, and history rows are complete and parseable.
 
+## Brown Rust Book prerequisites
+
+Study [recoverable errors](https://rust-book.cs.brown.edu/ch09-02-recoverable-errors-with-result.html), [automated tests](https://rust-book.cs.brown.edu/ch11-00-testing.html), and [futures, async concurrency, and tasks](https://rust-book.cs.brown.edu/ch17-00-async-await.html).
+
+## Suggested tests
+
+### Unit tests
+
+- `T01` — Classify `200`, timeout, and connection failure distinctly.
+- `T02` — Reject a zero concurrency limit.
+- `T03` — Summary counts include every configured service.
+
+### Integration tests
+
+- `T04` — Delayed local responses finish near the longest delay, not their sum.
+- `T05` — In-flight requests never exceed the semaphore limit.
+- `T06` — History remains parseable when one request fails.
+
 ## Stretch goals
 
 Add retry backoff, rolling uptime percentages, or graceful Ctrl-C shutdown.

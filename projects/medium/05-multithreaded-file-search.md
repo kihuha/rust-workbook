@@ -28,6 +28,24 @@ Paths, recursive traversal, threads, channels, byte and string handling, argumen
 
 Results match a single-threaded reference, unreadable files are reported without ending the search, workers are bounded, and output is deterministic.
 
+## Brown Rust Book prerequisites
+
+Study the [CLI and file project](https://rust-book.cs.brown.edu/ch12-00-an-io-project.html), [iterator pipelines](https://rust-book.cs.brown.edu/ch13-02-iterators.html), and [threads plus channels](https://rust-book.cs.brown.edu/ch16-00-concurrency.html).
+
+## Suggested tests
+
+### Unit tests
+
+- `T01` — Case-sensitive and insensitive matching follow their flags.
+- `T02` — Binary detection skips documented binary input.
+- `T03` — Excluded directory names are not traversed.
+
+### Integration tests
+
+- `T04` — Parallel results equal a sequential reference tree.
+- `T05` — An unreadable file is reported while other files are searched.
+- `T06` — Result order is identical across repeated runs.
+
 ## Stretch goals
 
 Support regular expressions, contextual lines, or cancellation after a result limit.

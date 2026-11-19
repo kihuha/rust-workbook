@@ -36,6 +36,24 @@ Structs, `Vec`, `HashMap`, string parsing, sorting, file I/O, `Result`, iterator
 
 The totals are deterministic, a bad row identifies its source line, and a failed load never returns a partially valid ledger as if it succeeded.
 
+## Brown Rust Book prerequisites
+
+Study [common collections](https://rust-book.cs.brown.edu/ch08-00-common-collections.html), [recoverable errors](https://rust-book.cs.brown.edu/ch09-02-recoverable-errors-with-result.html), [writing tests](https://rust-book.cs.brown.edu/ch11-01-writing-tests.html), [reading files](https://rust-book.cs.brown.edu/ch12-02-reading-a-file.html), and [iterators](https://rust-book.cs.brown.edu/ch13-02-iterators.html).
+
+## Suggested tests
+
+### Unit tests
+
+- `T01` — The three example expenses total `5450` cents.
+- `T02` — Food expenses total `5300` cents.
+- `T03` — Zero cents and malformed amounts are rejected.
+- `T04` — An empty ledger reports zero totals.
+
+### Integration tests
+
+- `T05` — Load the example file and verify the complete summary.
+- `T06` — A malformed third row reports line `3` and returns no partial ledger.
+
 ## Stretch goals
 
 Filter by date range or produce a monthly summary.

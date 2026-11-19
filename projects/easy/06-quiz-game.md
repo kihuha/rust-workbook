@@ -31,6 +31,24 @@ Enums, structs, pattern matching, buffered input, parsing, collections, error ha
 
 Both question types use one quiz loop, malformed answer keys produce useful errors, and scoring logic is tested without terminal input.
 
+## Brown Rust Book prerequisites
+
+Study [enums and `match`](https://rust-book.cs.brown.edu/ch06-00-enums.html), [modules](https://rust-book.cs.brown.edu/ch07-00-managing-growing-projects-with-packages-crates-and-modules.html), [collections](https://rust-book.cs.brown.edu/ch08-00-common-collections.html), [`Result`](https://rust-book.cs.brown.edu/ch09-02-recoverable-errors-with-result.html), and [test organization](https://rust-book.cs.brown.edu/ch11-03-test-organization.html).
+
+## Suggested tests
+
+### Unit tests
+
+- `T01` — `a` and `A` both match answer `A`.
+- `T02` — A wrong answer increments attempts but not score.
+- `T03` — Both question variants use the same scoring function.
+- `T04` — A malformed answer key is rejected before play.
+
+### Integration tests
+
+- `T05` — The example interaction ends with `1/1 (100%)`.
+- `T06` — Loading a mixed question file preserves question order.
+
 ## Stretch goals
 
 Shuffle questions, limit attempts, or save high scores.

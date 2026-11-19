@@ -39,6 +39,24 @@ Strings and slices, iterators, `HashMap`, sorting, file I/O, ownership, error pr
 
 Empty files work, output ordering is stable, and tokenization behavior is documented with tests for punctuation and mixed case.
 
+## Brown Rust Book prerequisites
+
+Study [slices](https://rust-book.cs.brown.edu/ch04-04-slices.html), [UTF-8 strings](https://rust-book.cs.brown.edu/ch08-02-strings.html), [hash maps](https://rust-book.cs.brown.edu/ch08-03-hash-maps.html), [file errors](https://rust-book.cs.brown.edu/ch09-02-recoverable-errors-with-result.html), and [iterator processing](https://rust-book.cs.brown.edu/ch13-02-iterators.html).
+
+## Suggested tests
+
+### Unit tests
+
+- `T01` — The example contains two lines and six words.
+- `T02` — `Rust` and `rust` count under one normalized key.
+- `T03` — Equal frequencies sort alphabetically.
+- `T04` — Empty text produces zero counts and no top words.
+
+### Integration tests
+
+- `T05` — Reading the example file prints the documented report.
+- `T06` — A missing file produces an error and no partial report.
+
 ## Stretch goals
 
 Add minimum word length, excluded-word, or top-N command-line options.

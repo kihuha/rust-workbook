@@ -38,6 +38,24 @@ Threads, channels, ownership transfer, worker coordination, maps, parsers, files
 
 Parallel output matches a single-threaded reference, every file is processed once, malformed lines are counted separately, and workers shut down cleanly.
 
+## Brown Rust Book prerequisites
+
+Study [hash maps](https://rust-book.cs.brown.edu/ch08-03-hash-maps.html), [contextual errors](https://rust-book.cs.brown.edu/ch09-02-recoverable-errors-with-result.html), [iterator aggregation](https://rust-book.cs.brown.edu/ch13-02-iterators.html), and [threads and channels](https://rust-book.cs.brown.edu/ch16-00-concurrency.html).
+
+## Suggested tests
+
+### Unit tests
+
+- `T01` — Parse each example line into the expected fields.
+- `T02` — Merge two partial maps by summing shared keys.
+- `T03` — A malformed line reports its file and line number.
+
+### Integration tests
+
+- `T04` — Parallel and sequential analyzers return identical reports.
+- `T05` — Worker count stays bounded and all workers terminate.
+- `T06` — Equal-frequency output remains deterministic across runs.
+
 ## Stretch goals
 
 Stream results for very large files or compare channel and Rayon implementations.

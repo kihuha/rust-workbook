@@ -32,6 +32,24 @@ Structs, floating-point values, validation, collections, iterators, `Option`, fi
 
 Empty journals return no statistics, duplicate dates follow the replacement rule, and conversion tests allow a small floating-point tolerance.
 
+## Brown Rust Book prerequisites
+
+Study [data types and control flow](https://rust-book.cs.brown.edu/ch03-00-common-programming-concepts.html), [structs](https://rust-book.cs.brown.edu/ch05-00-structs.html), [vectors](https://rust-book.cs.brown.edu/ch08-01-vectors.html), [writing tests](https://rust-book.cs.brown.edu/ch11-01-writing-tests.html), and [iterator adapters](https://rust-book.cs.brown.edu/ch13-02-iterators.html).
+
+## Suggested tests
+
+### Unit tests
+
+- `T01` — The example minimum is `23.5°C`, maximum `27.5°C`, and mean `25.0°C`.
+- `T02` — An empty journal returns no statistics.
+- `T03` — Celsius and Fahrenheit round-trip within the documented tolerance.
+- `T04` — A duplicate date without replacement permission is rejected.
+
+### Integration tests
+
+- `T05` — Save and reload the example observations without changing values.
+- `T06` — The `--replace` flow updates exactly one existing date.
+
 ## Stretch goals
 
 Show the hottest streak or render a simple text chart.

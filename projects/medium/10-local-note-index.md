@@ -29,6 +29,24 @@ Filesystem metadata, maps and sets, text parsing, serialization, incremental upd
 
 Deleted notes disappear from the index, unchanged notes are not reprocessed, result order is deterministic, and corrupt index data triggers a safe rebuild.
 
+## Brown Rust Book prerequisites
+
+Study [strings, maps, and sets](https://rust-book.cs.brown.edu/ch08-00-common-collections.html), [error recovery](https://rust-book.cs.brown.edu/ch09-00-error-handling.html), [reading files](https://rust-book.cs.brown.edu/ch12-02-reading-a-file.html), and [iterators](https://rust-book.cs.brown.edu/ch13-02-iterators.html).
+
+## Suggested tests
+
+### Unit tests
+
+- `T01` — Extract title, headings, tags, and terms from one note.
+- `T02` — Rank a two-term match above a one-term match.
+- `T03` — Equal-ranked notes sort deterministically.
+
+### Integration tests
+
+- `T04` — Unchanged notes are skipped on the second index run.
+- `T05` — Modified and deleted files update the index correctly.
+- `T06` — Corrupt persisted index data triggers a complete safe rebuild.
+
 ## Stretch goals
 
 Add phrase search, term-frequency scoring, or file watching.

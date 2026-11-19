@@ -2,13 +2,21 @@
 
 These projects require clearer module boundaries, broader testing, and at least one non-trivial integration such as concurrency, structured persistence, or external I/O.
 
-1. [Personal finance ledger](01-personal-finance-ledger.md)
-2. [Parallel log analyzer](02-parallel-log-analyzer.md)
-3. [Student gradebook](03-student-gradebook.md)
-4. [Async website monitor](04-async-website-monitor.md)
-5. [Multithreaded file search](05-multithreaded-file-search.md)
-6. [Library circulation system](06-library-circulation-system.md)
-7. [Configuration merger](07-configuration-merger.md)
-8. [Recipe and meal planner](08-recipe-and-meal-planner.md)
-9. [Event booking engine](09-event-booking-engine.md)
-10. [Local note index](10-local-note-index.md)
+## Projects and Brown Rust Book prerequisites
+
+| Project | Study these book chapters or sections first | What the project proves |
+| --- | --- | --- |
+| [01. Personal finance ledger](01-personal-finance-ledger.md) | [Ch. 7: Public APIs](https://rust-book.cs.brown.edu/ch07-00-managing-growing-projects-with-packages-crates-and-modules.html), [Ch. 9: Errors](https://rust-book.cs.brown.edu/ch09-00-error-handling.html), [Ch. 10: Traits](https://rust-book.cs.brown.edu/ch10-02-traits.html), [Ch. 11: Tests](https://rust-book.cs.brown.edu/ch11-00-testing.html), [Ch. 13: Iterators](https://rust-book.cs.brown.edu/ch13-02-iterators.html) | You can design an auditable domain model, repository boundary, and derived reports. |
+| [02. Parallel log analyzer](02-parallel-log-analyzer.md) | [Ch. 8: Maps](https://rust-book.cs.brown.edu/ch08-03-hash-maps.html), [Ch. 9: Contextual errors](https://rust-book.cs.brown.edu/ch09-02-recoverable-errors-with-result.html), [Ch. 13: Iterators](https://rust-book.cs.brown.edu/ch13-02-iterators.html), [Ch. 16: Threads and channels](https://rust-book.cs.brown.edu/ch16-00-concurrency.html) | You can bound parallel work and merge partial results deterministically. |
+| [03. Student gradebook](03-student-gradebook.md) | [Ch. 6: `Option` and matching](https://rust-book.cs.brown.edu/ch06-00-enums.html), [Ch. 7: Modules](https://rust-book.cs.brown.edu/ch07-00-managing-growing-projects-with-packages-crates-and-modules.html), [Ch. 9: Errors](https://rust-book.cs.brown.edu/ch09-00-error-handling.html), [Ch. 10: Traits](https://rust-book.cs.brown.edu/ch10-02-traits.html), [Ch. 11: Tests](https://rust-book.cs.brown.edu/ch11-00-testing.html) | You can separate raw scores, policy, validation, and reports. |
+| [04. Async website monitor](04-async-website-monitor.md) | [Ch. 9: Errors](https://rust-book.cs.brown.edu/ch09-00-error-handling.html), [Ch. 11: Tests](https://rust-book.cs.brown.edu/ch11-00-testing.html), [Ch. 17: Futures and async concurrency](https://rust-book.cs.brown.edu/ch17-00-async-await.html) | You can overlap I/O, bound concurrency, classify partial failures, and test with local services. |
+| [05. Multithreaded file search](05-multithreaded-file-search.md) | [Ch. 12: CLI and files](https://rust-book.cs.brown.edu/ch12-00-an-io-project.html), [Ch. 13: Iterator pipelines](https://rust-book.cs.brown.edu/ch13-02-iterators.html), [Ch. 16: Threads and channels](https://rust-book.cs.brown.edu/ch16-00-concurrency.html) | You can coordinate traversal and bounded search workers with stable output. |
+| [06. Library circulation system](06-library-circulation-system.md) | [Ch. 5: Structs and methods](https://rust-book.cs.brown.edu/ch05-00-structs.html), [Ch. 6: Enums](https://rust-book.cs.brown.edu/ch06-00-enums.html), [Ch. 8: Maps](https://rust-book.cs.brown.edu/ch08-03-hash-maps.html), [Ch. 9: Errors](https://rust-book.cs.brown.edu/ch09-00-error-handling.html), [Ch. 11: Tests](https://rust-book.cs.brown.edu/ch11-00-testing.html) | You can model related entities and enforce multi-step lending rules. |
+| [07. Configuration merger](07-configuration-merger.md) | [Ch. 6: Enums](https://rust-book.cs.brown.edu/ch06-00-enums.html), [Ch. 9: Error design](https://rust-book.cs.brown.edu/ch09-00-error-handling.html), [Ch. 10: Generics and traits](https://rust-book.cs.brown.edu/ch10-00-generics.html), [Ch. 12: Arguments and environment](https://rust-book.cs.brown.edu/ch12-00-an-io-project.html) | You can merge typed sources with explicit precedence, provenance, and redaction. |
+| [08. Recipe and meal planner](08-recipe-and-meal-planner.md) | [Ch. 5: Domain structs](https://rust-book.cs.brown.edu/ch05-00-structs.html), [Ch. 6: Unit enums](https://rust-book.cs.brown.edu/ch06-00-enums.html), [Ch. 8: Maps](https://rust-book.cs.brown.edu/ch08-03-hash-maps.html), [Ch. 10: Generic behavior](https://rust-book.cs.brown.edu/ch10-00-generics.html), [Ch. 13: Aggregation](https://rust-book.cs.brown.edu/ch13-02-iterators.html) | You can scale and combine compatible data without losing unit meaning. |
+| [09. Event booking engine](09-event-booking-engine.md) | [Ch. 5: Methods](https://rust-book.cs.brown.edu/ch05-03-method-syntax.html), [Ch. 6: State enums](https://rust-book.cs.brown.edu/ch06-00-enums.html), [Ch. 8: Queues and maps](https://rust-book.cs.brown.edu/ch08-00-common-collections.html), [Ch. 9: Recoverable errors](https://rust-book.cs.brown.edu/ch09-02-recoverable-errors-with-result.html), [Ch. 11: Scenario tests](https://rust-book.cs.brown.edu/ch11-00-testing.html) | You can protect capacity invariants across booking, cancellation, and promotion. |
+| [10. Local note index](10-local-note-index.md) | [Ch. 8: Maps and strings](https://rust-book.cs.brown.edu/ch08-00-common-collections.html), [Ch. 9: Recovery errors](https://rust-book.cs.brown.edu/ch09-00-error-handling.html), [Ch. 12: File I/O](https://rust-book.cs.brown.edu/ch12-02-reading-a-file.html), [Ch. 13: Iterators](https://rust-book.cs.brown.edu/ch13-02-iterators.html) | You can build, incrementally update, rank, and safely rebuild an index. |
+
+## Readiness check
+
+Start this level after completing two easy projects and the linked book chapters. You should be comfortable keeping domain logic outside `main.rs` and testing through a public API.

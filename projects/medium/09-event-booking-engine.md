@@ -32,6 +32,24 @@ Structs, enums, queues and maps, mutable state transitions, date-time parsing, c
 
 Confirmed seats never exceed capacity, IDs remain stable, cancellations are idempotent or return a clear error, and reload preserves wait-list order.
 
+## Brown Rust Book prerequisites
+
+Study [methods](https://rust-book.cs.brown.edu/ch05-03-method-syntax.html), [state enums](https://rust-book.cs.brown.edu/ch06-00-enums.html), [collections](https://rust-book.cs.brown.edu/ch08-00-common-collections.html), [recoverable errors](https://rust-book.cs.brown.edu/ch09-02-recoverable-errors-with-result.html), and [automated tests](https://rust-book.cs.brown.edu/ch11-00-testing.html).
+
+## Suggested tests
+
+### Unit tests
+
+- `T01` — Confirmed seats never exceed event capacity.
+- `T02` — Overflow requests enter the FIFO wait-list.
+- `T03` — Cancelling A promotes B according to the documented fill policy.
+- `T04` — Zero-seat requests are rejected.
+
+### Integration tests
+
+- `T05` — The example flow ends with B confirmed and one seat available.
+- `T06` — Save and reload without changing reservation IDs or wait-list order.
+
 ## Stretch goals
 
 Add reservation expiry, event overlap checks, or an append-only audit log.

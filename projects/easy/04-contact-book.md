@@ -31,6 +31,24 @@ Structs, vectors or maps, enums for update fields, string normalization, borrowi
 
 Updates target IDs, ambiguous name searches return every match, and invalid changes leave both memory and saved data unchanged.
 
+## Brown Rust Book prerequisites
+
+Study [borrowing](https://rust-book.cs.brown.edu/ch04-02-references-and-borrowing.html), [methods](https://rust-book.cs.brown.edu/ch05-03-method-syntax.html), [vectors and maps](https://rust-book.cs.brown.edu/ch08-00-common-collections.html), [error design](https://rust-book.cs.brown.edu/ch09-00-error-handling.html), and [automated tests](https://rust-book.cs.brown.edu/ch11-00-testing.html).
+
+## Suggested tests
+
+### Unit tests
+
+- `T01` — Adding a valid contact assigns a stable ID.
+- `T02` — Case-insensitive search returns all matching names.
+- `T03` — A duplicate non-empty email is rejected.
+- `T04` — A failed update preserves the original contact.
+
+### Integration tests
+
+- `T05` — Add, update, save, reload, and find the example contact.
+- `T06` — Removing one contact does not renumber the others.
+
 ## Stretch goals
 
 Import and export contacts as CSV or add tags.

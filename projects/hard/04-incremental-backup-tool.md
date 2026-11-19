@@ -35,6 +35,25 @@ Filesystem traversal, streaming hashes, content-addressed storage, serialization
 
 Two identical snapshots store no duplicate blobs, restore reproduces file contents, a failed snapshot never appears complete, and path traversal outside the destination is impossible.
 
+## Brown Rust Book prerequisites
+
+Study [ownership](https://rust-book.cs.brown.edu/ch04-00-understanding-ownership.html), [error propagation](https://rust-book.cs.brown.edu/ch09-02-recoverable-errors-with-result.html), [file I/O](https://rust-book.cs.brown.edu/ch12-02-reading-a-file.html), and [iterator processing](https://rust-book.cs.brown.edu/ch13-02-iterators.html).
+
+## Suggested tests
+
+### Unit tests
+
+- `T01` — Identical bytes produce the same content hash.
+- `T02` — Manifest paths reject absolute and parent-traversal components.
+- `T03` — Verification detects a modified blob.
+
+### Integration tests
+
+- `T04` — Two identical snapshots create no duplicate blobs.
+- `T05` — Restore reproduces every file byte in a temporary tree.
+- `T06` — An interrupted snapshot never becomes a visible complete manifest.
+- `T07` — Restore refuses to overwrite existing files by default.
+
 ## Stretch goals
 
 Add compression, encryption, retention policies, or garbage collection for unreferenced blobs.

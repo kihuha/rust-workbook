@@ -34,6 +34,25 @@ Parsing, type systems, binary encoding, indexes, page or record storage, journal
 
 Type errors do not mutate storage, restart preserves data and indexes, incomplete writes recover consistently, and query tests cover valid plus invalid syntax.
 
+## Brown Rust Book prerequisites
+
+Study [collections](https://rust-book.cs.brown.edu/ch08-00-common-collections.html), [error handling](https://rust-book.cs.brown.edu/ch09-00-error-handling.html), [generic abstractions](https://rust-book.cs.brown.edu/ch10-00-generics.html), [patterns](https://rust-book.cs.brown.edu/ch19-00-patterns.html), and [advanced types](https://rust-book.cs.brown.edu/ch20-03-advanced-types.html).
+
+## Suggested tests
+
+### Unit tests
+
+- `T01` — Parse each supported command and reject invalid syntax.
+- `T02` — Schema validation rejects wrong types and duplicate primary keys.
+- `T03` — Row encoding round-trips every supported value type.
+- `T04` — Primary-key lookup uses the index and returns the correct row.
+
+### Integration tests
+
+- `T05` — The example create, insert, and select flow returns `Amina`.
+- `T06` — Restart preserves rows, schemas, and index behavior.
+- `T07` — An interrupted mutation recovers to either the old or complete new state.
+
 ## Stretch goals
 
 Add secondary indexes, transactions, joins, or a query-plan display.

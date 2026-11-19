@@ -34,6 +34,24 @@ Serde-style decoding, enums, generic parsing helpers, environment and CLI access
 
 Every precedence combination is tested, invalid values name their source, secrets never appear in debug output, and the final type cannot represent missing required fields.
 
+## Brown Rust Book prerequisites
+
+Study [enums](https://rust-book.cs.brown.edu/ch06-00-enums.html), [error design](https://rust-book.cs.brown.edu/ch09-00-error-handling.html), [generics and traits](https://rust-book.cs.brown.edu/ch10-00-generics.html), and [arguments plus environment variables](https://rust-book.cs.brown.edu/ch12-00-an-io-project.html).
+
+## Suggested tests
+
+### Unit tests
+
+- `T01` — CLI wins over environment, file, and default values.
+- `T02` — Every typed parser reports the source of an invalid value.
+- `T03` — Missing required fields prevent final configuration construction.
+- `T04` — Debug and display output redact secrets.
+
+### Integration tests
+
+- `T05` — The example sources produce final port `6000`.
+- `T06` — Environment and CLI inputs override a real temporary config file.
+
 ## Stretch goals
 
 Add nested profiles or live file reload with atomic config replacement.

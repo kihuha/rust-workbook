@@ -35,6 +35,25 @@ Async HTTP, domain services, traits, shared state, rate-limiting algorithms, str
 
 Concurrent creation is collision-safe, rate-limit headers are correct, storage errors map predictably, logs contain no secrets, and in-flight requests finish during graceful shutdown.
 
+## Brown Rust Book prerequisites
+
+Study [public APIs](https://rust-book.cs.brown.edu/ch07-00-managing-growing-projects-with-packages-crates-and-modules.html), [traits](https://rust-book.cs.brown.edu/ch10-02-traits.html), [async programming](https://rust-book.cs.brown.edu/ch17-00-async-await.html), and [dynamic abstraction](https://rust-book.cs.brown.edu/ch18-02-trait-objects.html).
+
+## Suggested tests
+
+### Unit tests
+
+- `T01` — Reject invalid target URLs.
+- `T02` — Token-bucket refill and consumption follow the configured clock.
+- `T03` — Repository failures map to structured service errors.
+- `T04` — Secret values are absent from formatted logs.
+
+### Integration tests
+
+- `T05` — Create and resolve the example short link through HTTP.
+- `T06` — Requests over the limit receive the documented status and headers.
+- `T07` — Graceful shutdown lets accepted requests finish and rejects new work.
+
 ## Stretch goals
 
 Add expiring links, click analytics, authentication, or distributed rate-limit storage.

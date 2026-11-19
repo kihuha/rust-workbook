@@ -35,6 +35,25 @@ Directed graphs, cycle detection, concurrent scheduling, process management, has
 
 Every task runs at most once, cycles are rejected before execution, concurrency respects the limit, failure blocks only dependent work, and cache invalidation is tested.
 
+## Brown Rust Book prerequisites
+
+Study [collections](https://rust-book.cs.brown.edu/ch08-00-common-collections.html), [closures and iterators](https://rust-book.cs.brown.edu/ch13-00-functional-features.html), [worker coordination](https://rust-book.cs.brown.edu/ch16-00-concurrency.html), and [pattern syntax](https://rust-book.cs.brown.edu/ch19-03-pattern-syntax.html).
+
+## Suggested tests
+
+### Unit tests
+
+- `T01` — Reject a missing dependency.
+- `T02` — Detect a cycle and report a useful cycle path.
+- `T03` — Readiness requires every dependency to succeed.
+- `T04` — Fingerprints change when commands, inputs, or dependency outputs change.
+
+### Integration tests
+
+- `T05` — Independent tasks overlap without exceeding the worker limit.
+- `T06` — A failed task blocks only its downstream tasks.
+- `T07` — A second unchanged run uses the cache and executes no task commands.
+
 ## Stretch goals
 
 Add cancellation, remote cache storage, watch mode, or critical-path reporting.

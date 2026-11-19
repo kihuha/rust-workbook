@@ -36,6 +36,23 @@ Modules, enums, ownership, collections, iterators, custom errors, file replaceme
 
 Every accepted transaction preserves total money except deposits and withdrawals, failed operations append nothing, and saved data survives a round trip.
 
+## Brown Rust Book prerequisites
+
+Study [public APIs](https://rust-book.cs.brown.edu/ch07-00-managing-growing-projects-with-packages-crates-and-modules.html), [error handling](https://rust-book.cs.brown.edu/ch09-00-error-handling.html), [traits](https://rust-book.cs.brown.edu/ch10-02-traits.html), [tests](https://rust-book.cs.brown.edu/ch11-00-testing.html), and [iterators](https://rust-book.cs.brown.edu/ch13-02-iterators.html).
+
+## Suggested tests
+
+### Unit tests
+
+- `T01` — The example flow produces checking `150000` and savings `80000` cents.
+- `T02` — An overdraft appends no transaction and preserves balances.
+- `T03` — A transfer preserves the combined balance.
+
+### Integration tests
+
+- `T04` — Save, reload, and reproduce the same statement and balances.
+- `T05` — Simulate a failed save and verify the previous ledger remains readable.
+
 ## Stretch goals
 
 Add recurring transactions, CSV export, or budgets by category.

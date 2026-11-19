@@ -30,6 +30,24 @@ Paths, directory iteration, enums, maps, error propagation, ownership, command-l
 
 Dry-run makes no changes, collisions never overwrite data, directories are not moved, and one file failure does not hide the final summary.
 
+## Brown Rust Book prerequisites
+
+Study [module boundaries](https://rust-book.cs.brown.edu/ch07-00-managing-growing-projects-with-packages-crates-and-modules.html), [error propagation](https://rust-book.cs.brown.edu/ch09-02-recoverable-errors-with-result.html), [integration tests](https://rust-book.cs.brown.edu/ch11-03-test-organization.html), and the [file-oriented CLI project](https://rust-book.cs.brown.edu/ch12-00-an-io-project.html).
+
+## Suggested tests
+
+### Unit tests
+
+- `T01` — `.jpg`, `.txt`, and no extension map to the documented categories.
+- `T02` — A destination collision produces a skip decision.
+- `T03` — Directory entries are excluded from move plans.
+
+### Integration tests
+
+- `T04` — Dry-run against a temporary directory changes nothing.
+- `T05` — Execute the example plan and verify all destination paths.
+- `T06` — An existing destination file is never overwritten.
+
 ## Stretch goals
 
 Add recursive scanning, configurable categories, or a reversible move log.

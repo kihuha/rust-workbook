@@ -34,6 +34,25 @@ Async networking, binary or text protocols, file I/O, checksums, indexes, lockin
 
 Acknowledged writes survive restart, corrupt records are identified, compaction produces equivalent state, and concurrent tests never observe a partially applied record.
 
+## Brown Rust Book prerequisites
+
+Study [hash maps](https://rust-book.cs.brown.edu/ch08-03-hash-maps.html), [error handling](https://rust-book.cs.brown.edu/ch09-00-error-handling.html), [shared-state concurrency](https://rust-book.cs.brown.edu/ch16-03-shared-state.html), and [unsafe Rust](https://rust-book.cs.brown.edu/ch20-01-unsafe-rust.html) only if the design truly requires it.
+
+## Suggested tests
+
+### Unit tests
+
+- `T01` — Apply `SET`, `GET`, and `DELETE` to the in-memory index.
+- `T02` — Reject a record with an invalid checksum.
+- `T03` — Replay a valid log into the expected final state.
+- `T04` — Ignore or report an incomplete final record according to policy.
+
+### Integration tests
+
+- `T05` — Acknowledged writes survive process restart.
+- `T06` — Compaction preserves every visible key and tombstone outcome.
+- `T07` — Concurrent clients never observe a partially applied record.
+
 ## Stretch goals
 
 Add TTL expiry, snapshots, batch writes, or an in-process client library.

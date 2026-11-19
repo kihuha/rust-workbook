@@ -34,6 +34,23 @@ Structs, vectors, enums, command-line arguments, file I/O, error handling, borro
 
 Tasks survive a restart, IDs do not change when an item is removed, invalid commands do not modify the file, and the domain operations can be tested without launching the CLI.
 
+## Brown Rust Book prerequisites
+
+Study [struct methods](https://rust-book.cs.brown.edu/ch05-03-method-syntax.html), [enums and matching](https://rust-book.cs.brown.edu/ch06-00-enums.html), [vectors](https://rust-book.cs.brown.edu/ch08-01-vectors.html), [`Result`](https://rust-book.cs.brown.edu/ch09-02-recoverable-errors-with-result.html), [test organization](https://rust-book.cs.brown.edu/ch11-03-test-organization.html), and the [CLI project](https://rust-book.cs.brown.edu/ch12-00-an-io-project.html).
+
+## Suggested tests
+
+### Unit tests
+
+- `T01` — Adding two tasks assigns IDs `1` and `2`.
+- `T02` — Completing an unknown ID returns an error and changes nothing.
+- `T03` — Removing task `1` does not change task `2`'s ID.
+
+### Integration tests
+
+- `T04` — Add and complete a task through the CLI, restart, and verify its saved state.
+- `T05` — Run an invalid command and verify the save file is unchanged.
+
 ## Stretch goals
 
 Add priority levels, filter `list` by status, or support a `clear-completed` command.

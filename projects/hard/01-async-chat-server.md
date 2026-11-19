@@ -34,6 +34,25 @@ Async networking, tasks, channels, shared state, serialization, protocol design,
 
 Several clients can join different rooms concurrently, malformed frames close or reject only their sender, slow clients follow a documented policy, and shutdown leaves no tasks hanging.
 
+## Brown Rust Book prerequisites
+
+Study [shared ownership](https://rust-book.cs.brown.edu/ch15-00-smart-pointers.html), [channels and shared state](https://rust-book.cs.brown.edu/ch16-00-concurrency.html), [async concurrency](https://rust-book.cs.brown.edu/ch17-00-async-await.html), and [trait objects](https://rust-book.cs.brown.edu/ch18-02-trait-objects.html).
+
+## Suggested tests
+
+### Unit tests
+
+- `T01` — Encode and decode every protocol message without loss.
+- `T02` — Duplicate active usernames are rejected.
+- `T03` — Joining and leaving updates room membership exactly once.
+- `T04` — A full client queue follows the documented backpressure policy.
+
+### Integration tests
+
+- `T05` — Three loopback clients exchange messages only within their rooms.
+- `T06` — A malformed frame disconnects or rejects only its sender.
+- `T07` — Graceful shutdown terminates all connection tasks.
+
 ## Stretch goals
 
 Add authentication, message history, private messages, or WebSocket transport.

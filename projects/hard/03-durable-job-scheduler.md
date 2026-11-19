@@ -35,6 +35,25 @@ Async scheduling, priority queues, process management, state machines, persisten
 
 Jobs do not exceed the worker limit, cancellation is race-safe, restart reconstructs state, and tests use a fake clock rather than waiting in real time.
 
+## Brown Rust Book prerequisites
+
+Study [state enums](https://rust-book.cs.brown.edu/ch06-00-enums.html), [trait boundaries](https://rust-book.cs.brown.edu/ch10-02-traits.html), [thread coordination](https://rust-book.cs.brown.edu/ch16-00-concurrency.html), and [tasks versus threads](https://rust-book.cs.brown.edu/ch17-06-futures-tasks-threads.html).
+
+## Suggested tests
+
+### Unit tests
+
+- `T01` — Reject every invalid job-state transition.
+- `T02` — Exponential backoff produces the documented retry times.
+- `T03` — Cancellation is idempotent or returns a documented error.
+- `T04` — The fake clock makes a due job ready without sleeping.
+
+### Integration tests
+
+- `T05` — Running jobs never exceed the configured worker limit.
+- `T06` — Restart recovers jobs left in `Running` according to policy.
+- `T07` — Timeout terminates the child process and records its outcome.
+
 ## Stretch goals
 
 Add recurring schedules, dependencies between jobs, or an HTTP control API.
