@@ -1,6 +1,8 @@
 # Rust Workbook
 
-Mini briefs for practicing Rust through small, runnable projects. The tasks follow the learning order in the personal Rust plan and adapt the Python Workbook's broad mix of practical and puzzle-style exercises to Rust's type and ownership model. They are newly written Rust tasks, not copied exercise text or solutions.
+Mini briefs for practicing Rust through small, runnable projects. The tasks follow the learning order in the personal Rust plan and cover a broad mix of practical and puzzle-style exercises.
+
+Every task is written for Rust's type and ownership model. The workbook does not copy exercise text or solutions from another source.
 
 ## How to work
 
@@ -11,6 +13,10 @@ Mini briefs for practicing Rust through small, runnable projects. The tasks foll
 5. Keep solutions in your own project. These briefs intentionally do not include answers.
 
 Each file in `chapters/` contains three numbered challenges. The sequence number is global, so it is easy to track progress across chapters. Challenge sizes are intentionally modest; most are designed for one focused sitting.
+
+The [`projects/`](projects/README.md) track combines several topics in larger, practical builds. It contains 10 easy, 10 medium, and 10 hard project briefs.
+
+Work through the projects by scope when you want integration practice rather than a topic-specific exercise.
 
 ## Chapters
 
@@ -29,3 +35,9 @@ Each file in `chapters/` contains three numbered challenges. The sequence number
 13. Testing and idiomatic Rust
 
 The lifetime chapter begins with validity reasoning. Move to explicit lifetime syntax only after the earlier borrowing work feels solid.
+
+## Projects
+
+- [Easy projects](projects/easy/README.md)
+- [Medium projects](projects/medium/README.md)
+- [Hard projects](projects/hard/README.md)
