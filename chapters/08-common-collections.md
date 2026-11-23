@@ -1,3 +1,11 @@
+---
+schema: 1
+kind: chapter
+chapter: 8
+slug: common-collections
+title: "Common Collections"
+---
+
 # Chapter 8 — Common Collections
 
 ## Book alignment
@@ -11,6 +19,12 @@ Study [Common Collections](https://rust-book.cs.brown.edu/ch08-00-common-collect
 - Treat UTF-8 text safely instead of indexing strings as characters.
 - Use entry APIs for conditional map updates.
 
+<!-- challenge
+id: "08.1"
+title: "Word concordance"
+status: "not-started"
+-->
+
 ## Challenge 08.1 — Word concordance
 
 ### Brief
@@ -23,6 +37,16 @@ Build a concordance that maps each normalized word to the line numbers on which 
 - Store unique line numbers per word in ascending order.
 - Print words alphabetically.
 - Preserve apostrophes inside words.
+
+### Expected functions and `main.rs` flow
+
+```rust
+fn normalize_word(token: &str) -> Option<String>;
+fn build_concordance(text: &str) -> std::collections::HashMap<String, Vec<usize>>;
+fn format_concordance(concordance: &std::collections::HashMap<String, Vec<usize>>) -> String;
+```
+
+`main` reads the input file into a string, calls `build_concordance`, then prints `format_concordance`. Sorting belongs in formatting because `HashMap` iteration order is not alphabetical.
 
 ### Example input
 
@@ -57,6 +81,14 @@ tools: 3
 
 The implementation uses collection APIs deliberately and never indexes a `String` by integer position.
 
+<!-- /challenge -->
+
+<!-- challenge
+id: "08.2"
+title: "Ownership Inventory: mutable collection references"
+status: "not-started"
+-->
+
 ## Challenge 08.2 — Ownership Inventory: mutable collection references
 
 ### Brief
@@ -69,6 +101,15 @@ Explore when vector and map references become invalid by implementing a safe ros
 - Read a student reference, use it, then mutate the vector only after its last use.
 - Update scores through `entry` without holding a conflicting map reference.
 - Include commented compile-fail examples for invalid reference use.
+
+### Expected functions and `main.rs` flow
+
+```rust
+fn add_score(scores: &mut std::collections::HashMap<String, u32>, name: &str, points: u32);
+fn add_student(roster: &mut Vec<String>, name: String);
+```
+
+`main` reads and prints the selected roster entry before calling `add_student`, so no element reference crosses the vector mutation. It calls `add_score` without retaining another reference into the map, then prints the updated score and roster.
 
 ### Example
 
@@ -92,3 +133,5 @@ roster after addition: ["Amina", "Kamau", "Zuri"]
 ### Done when
 
 You can explain why collection mutation may relocate data and how last use affects borrow validity.
+
+<!-- /challenge -->

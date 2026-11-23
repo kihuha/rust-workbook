@@ -1,3 +1,11 @@
+---
+schema: 1
+kind: chapter
+chapter: 13
+slug: iterators-and-closures
+title: "Functional Language Features: Iterators and Closures"
+---
+
 # Chapter 13 — Functional Language Features: Iterators and Closures
 
 ## Book alignment
@@ -10,6 +18,12 @@ Study [Iterators and Closures](https://rust-book.cs.brown.edu/ch13-00-functional
 - Build lazy iterator pipelines and know when they execute.
 - Choose consuming and non-consuming adapters intentionally.
 - Compare iterator clarity and performance with explicit loops.
+
+<!-- challenge
+id: "13.1"
+title: "Configurable transaction report"
+status: "not-started"
+-->
 
 ## Challenge 13.1 — Configurable transaction report
 
@@ -24,6 +38,21 @@ Filter and transform borrowed transactions using caller-provided closures.
 - Accept a mapping closure for output formatting.
 - Calculate the total without cloning transactions.
 - Return `None` for the average of an empty selection.
+
+### Expected interface and `main.rs` flow
+
+```rust
+fn build_report<P, M>(
+    transactions: &[Transaction],
+    include: P,
+    format_row: M,
+) -> TransactionReport
+where
+    P: Fn(&Transaction) -> bool,
+    M: Fn(&Transaction) -> String;
+```
+
+`main` creates the transactions and closures, calls `build_report`, then prints the returned rows, total, and average. `build_report` borrows the input slice and must not print or clone entire transactions.
 
 ### Example
 
@@ -54,6 +83,14 @@ average: 2650.00 cents
 
 The pipeline is lazy until consumed and closure bounds express how callbacks are used.
 
+<!-- /challenge -->
+
+<!-- challenge
+id: "13.2"
+title: "Custom Fibonacci iterator"
+status: "not-started"
+-->
+
 ## Challenge 13.2 — Custom Fibonacci iterator
 
 ### Brief
@@ -66,6 +103,21 @@ Implement an iterator that generates Fibonacci numbers up to a caller-provided m
 - Yield `0, 1, 1, 2, ...` while values are at most the limit.
 - Stop safely before addition overflow.
 - Use adapters to select even values and sum a prefix.
+
+### Expected interface and `main.rs` flow
+
+```rust
+impl Fibonacci {
+    fn new(limit: u64) -> Self;
+}
+
+impl Iterator for Fibonacci {
+    type Item = u64;
+    fn next(&mut self) -> Option<u64>;
+}
+```
+
+`main` reads the limit, creates separate `Fibonacci::new(limit)` values for the full list and even-number pipeline, and consumes them with iterator adapters. Do not reuse an already consumed iterator and expect it to restart.
 
 ### Example
 
@@ -93,3 +145,5 @@ even sum: 10
 ### Done when
 
 Iterator state, laziness, termination, and adapter composition can be explained from the implementation.
+
+<!-- /challenge -->

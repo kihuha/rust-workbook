@@ -1,3 +1,11 @@
+---
+schema: 1
+kind: chapter
+chapter: 19
+slug: patterns-and-matching
+title: "Patterns and Matching"
+---
+
 # Chapter 19 — Patterns and Matching
 
 ## Book alignment
@@ -10,6 +18,12 @@ Study [Patterns and Matching](https://rust-book.cs.brown.edu/ch19-00-patterns.ht
 - Destructure nested structs, enums, tuples, and references.
 - Use guards, ranges, bindings, and ignored fields precisely.
 - Explain refutability rather than relying on compiler trial and error.
+
+<!-- challenge
+id: "19.1"
+title: "Event pattern router"
+status: "not-started"
+-->
 
 ## Challenge 19.1 — Event pattern router
 
@@ -24,6 +38,14 @@ Route nested application events using precise patterns without manually unpackin
 - Use a match guard for high-priority events.
 - Use `@` to bind a value while checking a range.
 - Avoid catch-all arms that hide meaningful variants.
+
+### Expected function and `main.rs` flow
+
+```rust
+fn route(event: &Event) -> Route;
+```
+
+`main` constructs one example of each event variant, borrows each event into `route`, then prints the event and route. `route` contains the destructuring, guard, and `@` patterns; it does not print or consume owned event fields.
 
 ### Example
 
@@ -51,6 +73,14 @@ Packet { port: 443, bytes: 1200 } -> secure traffic on port 443
 
 Patterns communicate data shape and routing intent more clearly than nested field-by-field conditions.
 
+<!-- /challenge -->
+
+<!-- challenge
+id: "19.2"
+title: "Pattern-driven command interpreter"
+status: "not-started"
+-->
+
 ## Challenge 19.2 — Pattern-driven command interpreter
 
 ### Brief
@@ -63,6 +93,15 @@ Parse tokenized commands into tuples and use several pattern locations to execut
 - Use function-parameter destructuring for coordinates.
 - Use `let...else` for required command arguments.
 - Distinguish irrefutable `let` patterns from refutable conditional patterns.
+
+### Expected functions and `main.rs` flow
+
+```rust
+fn move_by((x, y): &mut (i32, i32), (dx, dy): (i32, i32));
+fn execute(commands: VecDeque<Vec<String>>) -> Result<(i32, i32), CommandError>;
+```
+
+`main` tokenizes input lines into the queue, calls `execute`, and prints the final position. `execute` owns the `while let` loop and command matching. `move_by` demonstrates parameter destructuring and performs only coordinate mutation.
 
 ### Example
 
@@ -89,3 +128,5 @@ SHOW      -> position (2, 6)
 ### Done when
 
 Every pattern form is used where its refutability rules and control-flow behavior are appropriate.
+
+<!-- /challenge -->

@@ -1,3 +1,11 @@
+---
+schema: 1
+kind: chapter
+chapter: 11
+slug: writing-automated-tests
+title: "Writing Automated Tests"
+---
+
 # Chapter 11 — Writing Automated Tests
 
 ## Book alignment
@@ -11,6 +19,12 @@ Study [Writing Automated Tests](https://rust-book.cs.brown.edu/ch11-00-testing.h
 - Use expected panics and `Result`-returning tests appropriately.
 - Place tests according to whether they need internals or the public API.
 
+<!-- challenge
+id: "11.1"
+title: "Test an account library"
+status: "not-started"
+-->
+
 ## Challenge 11.1 — Test an account library
 
 ### Brief
@@ -23,6 +37,19 @@ Implement a small account library from tests first. Keep balance private and exp
 - Reject zero deposits and withdrawals.
 - Reject withdrawals above the balance without changing state.
 - Use unit tests for internal validation and integration tests for the public API.
+
+### Expected public API and example flow
+
+```rust
+impl Account {
+    pub fn new(opening_balance: u64) -> Self;
+    pub fn deposit(&mut self, cents: u64) -> Result<(), AccountError>;
+    pub fn withdraw(&mut self, cents: u64) -> Result<(), AccountError>;
+    pub fn balance(&self) -> u64;
+}
+```
+
+If you include `main.rs`, keep it as a demonstration: construct the account, execute the documented deposits and withdrawals, and print results through the public API. Tests must call the same methods rather than duplicate account logic.
 
 ### Example
 
@@ -51,6 +78,14 @@ withdraw: 2000 -> error; balance remains 1100
 
 Test names describe behavior, a deliberately introduced bug causes the relevant test to fail, and `cargo test` passes after the fix.
 
+<!-- /challenge -->
+
+<!-- challenge
+id: "11.2"
+title: "Test-suite organization lab"
+status: "not-started"
+-->
+
 ## Challenge 11.2 — Test-suite organization lab
 
 ### Brief
@@ -63,6 +98,10 @@ Create a library with fast unit tests, public integration tests, and one expensi
 - Filter tests by a common name fragment.
 - Mark one slow test with `#[ignore]` and document how to run it.
 - Include one test returning `Result<(), E>` rather than panicking manually.
+
+### Expected library and test flow
+
+Expose one small public parsing function from `src/lib.rs`; keep lower-level parsing helpers private. Unit tests beside the helpers may call private code. Files under `tests/` call only the public function and share setup through `tests/common/mod.rs`. A `main.rs` file is not required for this library-focused challenge.
 
 ### Example commands
 
@@ -88,3 +127,5 @@ cargo test -- --show-output
 ### Done when
 
 You can explain why every test belongs in its chosen location and how to run any subset deliberately.
+
+<!-- /challenge -->

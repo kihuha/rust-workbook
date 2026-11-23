@@ -1,3 +1,11 @@
+---
+schema: 1
+kind: chapter
+chapter: 15
+slug: smart-pointers
+title: "Smart Pointers"
+---
+
 # Chapter 15 — Smart Pointers
 
 ## Book alignment
@@ -11,6 +19,12 @@ Study [Smart Pointers](https://rust-book.cs.brown.edu/ch15-00-smart-pointers.htm
 - Model shared ownership with reference counts.
 - Apply interior mutability carefully and avoid cycles.
 
+<!-- challenge
+id: "15.1"
+title: "Shared document tree"
+status: "not-started"
+-->
+
 ## Challenge 15.1 — Shared document tree
 
 ### Brief
@@ -23,6 +37,18 @@ Build a tree in which parents own children and children can navigate to parents 
 - Store the parent as `Weak<RefCell<Node>>`.
 - Add children through a method that updates both directions.
 - Print strong and weak counts before and after dropping the root.
+
+### Expected interface and `main.rs` flow
+
+```rust
+impl Node {
+    fn new(name: impl Into<String>) -> Rc<RefCell<Self>>;
+    fn add_child(parent: &Rc<RefCell<Node>>, child: Rc<RefCell<Node>>);
+    fn parent(&self) -> Option<Rc<RefCell<Node>>>;
+}
+```
+
+`main` creates `root`, `chapter`, and `section`, connects them through `add_child`, and uses `parent` for upward navigation. It prints reference counts before and after parent owners leave scope. Callers must not set parent and child links separately.
 
 ### Example
 
@@ -51,6 +77,14 @@ section parent: unavailable
 
 Reference counts match your predictions and weak back-references do not keep ancestors alive.
 
+<!-- /challenge -->
+
+<!-- challenge
+id: "15.2"
+title: "Recursive expression with `Box`"
+status: "not-started"
+-->
+
 ## Challenge 15.2 — Recursive expression with `Box`
 
 ### Brief
@@ -63,6 +97,18 @@ Represent and evaluate an arithmetic expression tree whose recursive variants ha
 - Use `Box<Expr>` for recursive children.
 - Implement evaluation and formatted display.
 - Add a wrapper type that logs cleanup through `Drop` for observation only.
+
+### Expected interface and `main.rs` flow
+
+```rust
+impl Expr {
+    fn evaluate(&self) -> i64;
+}
+
+impl std::fmt::Display for Expr { /* ... */ }
+```
+
+`main` constructs the documented tree with boxed child expressions, prints it through `Display`, and prints `evaluate()`. The cleanup wrapper may log when dropped, but expression evaluation must not depend on those messages.
 
 ### Example
 
@@ -89,3 +135,5 @@ result: -20
 ### Done when
 
 You can explain why recursive children require indirection and why `Box` does not imply shared ownership.
+
+<!-- /challenge -->

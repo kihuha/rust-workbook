@@ -14,6 +14,8 @@ Every task is written for Rust's type and ownership model. The workbook does not
 
 Each file in `chapters/` follows the number and scope of a concept-bearing book chapter. Each challenge includes an example plus numbered unit and integration test cases.
 
+Chapter files expose a machine-readable schema. YAML front matter identifies the chapter. Each challenge is bounded by `<!-- challenge` and `<!-- /challenge -->` comments and carries a stable ID, title, and `not-started` or `completed` status. Keep the metadata title equal to its challenge heading.
+
 The workbook intentionally omits the book Introduction, Chapter 2 guessing-game walkthrough, and Chapter 21 web-server walkthrough. They are orientation or practice builds rather than new core material.
 
 Chapter 12 remains because its project introduces practical CLI arguments, file I/O, environment variables, `stderr`, modular design, and test-driven development.

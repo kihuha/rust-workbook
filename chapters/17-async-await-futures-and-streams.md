@@ -1,3 +1,11 @@
+---
+schema: 1
+kind: chapter
+chapter: 17
+slug: async-await-futures-and-streams
+title: "Async, Await, Futures, and Streams"
+---
+
 # Chapter 17 — Async, Await, Futures, and Streams
 
 ## Book alignment
@@ -10,6 +18,12 @@ Study [Fundamentals of Asynchronous Programming](https://rust-book.cs.brown.edu/
 - Run independent operations concurrently rather than sequentially.
 - Work with collections of futures and streams.
 - Choose async tasks or OS threads based on workload.
+
+<!-- challenge
+id: "17.1"
+title: "Concurrent service checker"
+status: "not-started"
+-->
 
 ## Challenge 17.1 — Concurrent service checker
 
@@ -24,6 +38,23 @@ Check several simulated or local HTTP services concurrently and preserve one res
 - Limit concurrent checks with a semaphore.
 - Return success, timeout, or request error for each service.
 - Use a local mock server in automated tests.
+
+### Expected interface and `main.rs` flow
+
+```rust
+async fn check_service(
+    service: Service,
+    timeout: std::time::Duration,
+) -> ServiceResult;
+
+async fn check_all(
+    services: Vec<Service>,
+    timeout: std::time::Duration,
+    concurrency: usize,
+) -> Result<Vec<ServiceResult>, ConfigError>;
+```
+
+Async `main` builds the service list, calls `check_all`, then prints every result and the healthy count. `check_all` acquires semaphore permits and starts checks concurrently; `main` must not await each service in a sequential loop.
 
 ### Example
 
@@ -52,6 +83,14 @@ healthy: 1/3
 
 The tests prove actual overlap and every future resolves to a recorded outcome.
 
+<!-- /challenge -->
+
+<!-- challenge
+id: "17.2"
+title: "Streamed event window"
+status: "not-started"
+-->
+
 ## Challenge 17.2 — Streamed event window
 
 ### Brief
@@ -65,6 +104,17 @@ Consume an asynchronous stream of events, group them into bounded windows, and s
 - Flush a partial window when the stream ends.
 - Allow a cancellation signal to stop production and consumption.
 - Avoid blocking calls inside async tasks.
+
+### Expected interface and `main.rs` flow
+
+```rust
+fn event_stream(count: u64, interval: std::time::Duration) -> impl Stream<Item = u64>;
+async fn collect_windows<S>(events: S, window_size: usize) -> Vec<Vec<u64>>
+where
+    S: Stream<Item = u64>;
+```
+
+Async `main` creates the stream, passes it to `collect_windows` with a size of `5`, and prints returned windows plus the total event count. Cancellation must reach both producer and consumer; neither function uses `std::thread::sleep`.
 
 ### Example
 
@@ -91,3 +141,5 @@ stream complete: 8 events
 ### Done when
 
 You can explain the roles of the stream, future polling, task scheduling, and cancellation path.
+
+<!-- /challenge -->

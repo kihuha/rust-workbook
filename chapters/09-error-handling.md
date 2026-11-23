@@ -1,3 +1,11 @@
+---
+schema: 1
+kind: chapter
+chapter: 9
+slug: error-handling
+title: "Error Handling"
+---
+
 # Chapter 9 — Error Handling
 
 ## Book alignment
@@ -10,6 +18,12 @@ Study [Error Handling](https://rust-book.cs.brown.edu/ch09-00-error-handling.htm
 - Preserve useful context while propagating errors.
 - Use `panic!`, `unwrap`, and `expect` only when justified.
 - Design return types that make failure visible.
+
+<!-- challenge
+id: "09.1"
+title: "Validated configuration loader"
+status: "not-started"
+-->
 
 ## Challenge 09.1 — Validated configuration loader
 
@@ -24,6 +38,15 @@ Load a small `key=value` configuration file and distinguish file, syntax, and va
 - Parse port as `u16` and require workers in `1..=64`.
 - Include line numbers in syntax errors.
 - Propagate expected failures without `unwrap`.
+
+### Expected interface and `main.rs` flow
+
+```rust
+fn parse_config(text: &str) -> Result<Config, ConfigError>;
+fn load_config(path: &std::path::Path) -> Result<Config, ConfigError>;
+```
+
+`parse_config` handles syntax and validation only. `load_config` reads the file and passes its contents to `parse_config`, preserving file errors as a distinct `ConfigError` variant. `main` parses the path, calls `load_config`, prints the `Config` on success, and prints errors to standard error before exiting unsuccessfully.
 
 ### Example input
 
@@ -54,6 +77,14 @@ Config { host: "127.0.0.1", port: 8080, workers: 4 }
 
 Every expected failure has a distinct, contextual error path and valid configuration reaches the caller.
 
+<!-- /challenge -->
+
+<!-- challenge
+id: "09.2"
+title: "Panic policy audit"
+status: "not-started"
+-->
+
 ## Challenge 09.2 — Panic policy audit
 
 ### Brief
@@ -66,6 +97,18 @@ Implement a seat-reservation type and decide which failures return `Result` and 
 - Return errors for zero seats and insufficient capacity.
 - Keep internal reserved seats at or below capacity.
 - Document any `assert!`, `expect`, or unreachable state with its invariant.
+
+### Expected interface and `main.rs` flow
+
+```rust
+impl ReservationBook {
+    fn new(capacity: u32) -> Self;
+    fn reserve(&mut self, seats: u32) -> Result<(), ReservationError>;
+    fn remaining(&self) -> u32;
+}
+```
+
+`main` creates a ten-seat book, calls `reserve(4)` and `reserve(7)` in sequence, and prints each result plus `remaining()`. `reserve` validates the request before mutating state, so a failed request leaves the reservation count unchanged.
 
 ### Example
 
@@ -89,3 +132,5 @@ reserve 7 -> Err(InsufficientCapacity { requested: 7, available: 6 })
 ### Done when
 
 Caller mistakes are recoverable and panics are limited to states the public API should make impossible.
+
+<!-- /challenge -->

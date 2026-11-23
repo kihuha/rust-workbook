@@ -1,3 +1,11 @@
+---
+schema: 1
+kind: chapter
+chapter: 4
+slug: understanding-ownership
+title: "Understanding Ownership"
+---
+
 # Chapter 4 — Understanding Ownership
 
 ## Book alignment
@@ -10,6 +18,12 @@ Study [Understanding Ownership](https://rust-book.cs.brown.edu/ch04-00-understan
 - Choose owned values, shared references, or mutable references intentionally.
 - Keep references valid and prevent conflicting access.
 - Return slices that borrow from valid source data.
+
+<!-- challenge
+id: "04.1"
+title: "Document handoff"
+status: "not-started"
+-->
 
 ## Challenge 04.1 — Document handoff
 
@@ -24,6 +38,16 @@ Model a document that is inspected, renamed, and archived without unnecessary cl
 - `rename` must mutate through `&mut`.
 - `archive` must consume the document and return an archive record.
 - The caller must not use the document after archiving.
+
+### Expected interface and `main.rs` flow
+
+```rust
+fn word_count(document: &Document) -> usize;
+fn rename(document: &mut Document, new_title: String);
+fn archive(document: Document) -> ArchiveRecord;
+```
+
+`main` creates one `Document`, borrows it for `word_count`, mutably borrows it for `rename`, then moves it into `archive`. It prints each result in the example order. Do not clone the document to keep using it after `archive`.
 
 ### Example
 
@@ -48,6 +72,14 @@ archived: Rust Notes (4 words)
 
 Each function signature communicates its ownership intent and no clone is used without a written reason.
 
+<!-- /challenge -->
+
+<!-- challenge
+id: "04.2"
+title: "Borrowed command parser"
+status: "not-started"
+-->
+
 ## Challenge 04.2 — Borrowed command parser
 
 ### Brief
@@ -60,6 +92,10 @@ Parse a command line into borrowed slices so the parser does not allocate copies
 - Trim surrounding whitespace.
 - Return the first word as the command and the remaining trimmed text as its argument.
 - Return `None` for blank input.
+
+### Expected `main.rs` flow
+
+`main` joins its command-line arguments into one input string, calls `parse_command(&input)`, and prints the borrowed command and argument. `parse_command` performs no printing and returns slices of `input` rather than new `String` values.
 
 ### Example cases
 
@@ -83,3 +119,5 @@ Parse a command line into borrowed slices so the parser does not allocate copies
 ### Done when
 
 The result borrows from the input, contains no cloned strings, and its validity can be explained from the function signature.
+
+<!-- /challenge -->

@@ -1,3 +1,11 @@
+---
+schema: 1
+kind: chapter
+chapter: 7
+slug: packages-crates-and-modules
+title: "Packages, Crates, and Modules"
+---
+
 # Chapter 7 — Packages, Crates, and Modules
 
 ## Book alignment
@@ -11,6 +19,12 @@ Study [Packages, Crates, and Modules](https://rust-book.cs.brown.edu/ch07-00-man
 - Navigate module trees with absolute and relative paths.
 - Split modules into files without changing their logical tree.
 
+<!-- challenge
+id: "07.1"
+title: "Split a shop package"
+status: "not-started"
+-->
+
 ## Challenge 07.1 — Split a shop package
 
 ### Brief
@@ -23,6 +37,21 @@ Build one Cargo package containing a reusable inventory library and a thin comma
 - Keep stock mutation helpers private.
 - Re-export the main `Product` and `Inventory` types from the crate root.
 - Let `main.rs` use only the public API.
+
+### Expected public API and `main.rs` flow
+
+```rust
+pub use inventory::{Inventory, Product};
+pub use reports::inventory_report;
+
+impl Inventory {
+    pub fn new() -> Self;
+    pub fn add(&mut self, product: Product);
+    pub fn set_quantity(&mut self, sku: &str, quantity: u32) -> Result<(), String>;
+}
+```
+
+`main.rs` imports the re-exported `Inventory`, `Product`, and `inventory_report`, adds the example product, and prints `inventory_report(&inventory)`. It does not import private helpers or reach into module fields.
 
 ### Example output
 
@@ -45,6 +74,14 @@ Inventory value: 13500 cents
 
 The package has clear crate boundaries and rearranging files does not require exposing internals.
 
+<!-- /challenge -->
+
+<!-- challenge
+id: "07.2"
+title: "Dual-binary converter package"
+status: "not-started"
+-->
+
 ## Challenge 07.2 — Dual-binary converter package
 
 ### Brief
@@ -57,6 +94,15 @@ Create one library crate with two binaries: one converts a single value and anot
 - Provide `src/bin/convert.rs` and `src/bin/batch.rs`.
 - Support Celsius/Fahrenheit and kilometers/miles.
 - Use `use` paths that make call sites readable without glob imports.
+
+### Expected library API and binary flow
+
+```rust
+pub fn convert(value: f64, from: &str, to: &str) -> Result<f64, String>;
+pub fn convert_line(line: &str) -> Result<String, String>;
+```
+
+`convert.rs` parses one value and unit pair, calls `convert`, and prints the formatted result. `batch.rs` reads a file and calls `convert_line` for each line. Neither binary duplicates conversion formulas.
 
 ### Example
 
@@ -82,3 +128,5 @@ line 2: 32 f = 0.00 c
 ### Done when
 
 Both binaries reuse one library implementation and the module tree mirrors the domain rather than the executable layout.
+
+<!-- /challenge -->

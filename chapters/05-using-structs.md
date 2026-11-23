@@ -1,3 +1,11 @@
+---
+schema: 1
+kind: chapter
+chapter: 5
+slug: using-structs
+title: "Using Structs to Structure Related Data"
+---
+
 # Chapter 5 — Using Structs to Structure Related Data
 
 ## Book alignment
@@ -11,6 +19,12 @@ Study [Using Structs to Structure Related Data](https://rust-book.cs.brown.edu/c
 - Define methods that borrow or mutate `self`.
 - Use associated functions as constructors.
 
+<!-- challenge
+id: "05.1"
+title: "Library book record"
+status: "not-started"
+-->
+
 ## Challenge 05.1 — Library book record
 
 ### Brief
@@ -23,6 +37,19 @@ Create a `Book` type that owns its descriptive data and keeps borrowing state co
 - Provide `Book::new`, `summary`, `checkout`, and `return_book`.
 - Reject checkout when already borrowed.
 - Reject return when already available.
+
+### Expected interface and `main.rs` flow
+
+```rust
+impl Book {
+    fn new(isbn: String, title: String, author: String) -> Self;
+    fn summary(&self) -> String;
+    fn checkout(&mut self) -> Result<(), String>;
+    fn return_book(&mut self) -> Result<(), String>;
+}
+```
+
+`main` constructs a book with `Book::new`, prints `summary`, performs the two checkout attempts and one return, then prints each result. Only these methods may change availability.
 
 ### Example
 
@@ -48,6 +75,14 @@ return -> success
 
 State changes occur only through methods and the struct cannot accidentally mix data belonging to different books.
 
+<!-- /challenge -->
+
+<!-- challenge
+id: "05.2"
+title: "Rectangle packing report"
+status: "not-started"
+-->
+
 ## Challenge 05.2 — Rectangle packing report
 
 ### Brief
@@ -60,6 +95,20 @@ Model rectangular packages and determine whether one package can fit completely 
 - Add `area`, `perimeter`, `can_hold`, and `square` methods or associated functions.
 - Reject zero dimensions through a constructor that returns `Result`.
 - `can_hold` must require both dimensions to be strictly larger.
+
+### Expected interface and `main.rs` flow
+
+```rust
+impl Rectangle {
+    fn new(width: u32, height: u32) -> Result<Self, String>;
+    fn square(size: u32) -> Result<Self, String>;
+    fn area(&self) -> u32;
+    fn perimeter(&self) -> u32;
+    fn can_hold(&self, other: &Rectangle) -> bool;
+}
+```
+
+`main` builds the outer and inner rectangles through `Rectangle::new`, propagates construction errors, and uses the methods to print the report. It must not construct unchecked rectangles with struct literals.
 
 ### Example
 
@@ -84,3 +133,5 @@ outer can hold inner: true
 ### Done when
 
 Construction protects the type’s invariant and instance behavior is expressed through methods.
+
+<!-- /challenge -->

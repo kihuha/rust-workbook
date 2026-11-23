@@ -1,3 +1,11 @@
+---
+schema: 1
+kind: chapter
+chapter: 16
+slug: fearless-concurrency
+title: "Fearless Concurrency"
+---
+
 # Chapter 16 — Fearless Concurrency
 
 ## Book alignment
@@ -10,6 +18,12 @@ Study [Fearless Concurrency](https://rust-book.cs.brown.edu/ch16-00-concurrency.
 - Coordinate producers and consumers with channels.
 - Protect shared mutable state with `Arc<Mutex<T>>`.
 - Design shutdown paths and avoid common deadlock patterns.
+
+<!-- challenge
+id: "16.1"
+title: "Parallel checksum workers"
+status: "not-started"
+-->
 
 ## Challenge 16.1 — Parallel checksum workers
 
@@ -24,6 +38,18 @@ Calculate checksums for many byte buffers using a fixed number of worker threads
 - Send job results to the coordinator.
 - Preserve errors per job instead of dropping all results.
 - Join every worker before returning.
+
+### Expected interface and `main.rs` flow
+
+```rust
+fn checksum(bytes: &[u8]) -> Result<u64, ChecksumError>;
+fn calculate_all(
+    jobs: Vec<Job>,
+    worker_count: usize,
+) -> Result<Vec<JobResult>, WorkerPoolError>;
+```
+
+`main` builds the jobs, calls `calculate_all` once, sorts returned results by stable job ID if needed, and prints them. `calculate_all` owns thread creation, channel lifetime, and joins. Workers call `checksum`; they do not print.
 
 ### Example
 
@@ -51,6 +77,14 @@ completed: 2
 
 The coordinator owns lifecycle decisions and worker completion cannot be lost silently.
 
+<!-- /challenge -->
+
+<!-- challenge
+id: "16.2"
+title: "Compare channels and shared state"
+status: "not-started"
+-->
+
 ## Challenge 16.2 — Compare channels and shared state
 
 ### Brief
@@ -63,6 +97,16 @@ Implement a parallel word count twice: first with per-worker maps sent through a
 - Keep lock scopes minimal in the shared-state version.
 - Use multiple producers in the channel version.
 - Document contention, ownership, and failure tradeoffs.
+
+### Expected functions and `main.rs` flow
+
+```rust
+fn count_sequential(chunks: &[&str]) -> HashMap<String, usize>;
+fn count_with_channels(chunks: Vec<String>) -> Result<HashMap<String, usize>, CountError>;
+fn count_with_shared_state(chunks: Vec<String>) -> Result<HashMap<String, usize>, CountError>;
+```
+
+`main` gives equivalent owned chunk sets to both concurrent functions, compares each result with `count_sequential`, then prints one sorted report. Counting functions return maps and errors; they do not print from worker threads.
 
 ### Example
 
@@ -90,3 +134,5 @@ safe: 1
 ### Done when
 
 You can justify which coordination model better matches this problem rather than choosing based only on shorter code.
+
+<!-- /challenge -->

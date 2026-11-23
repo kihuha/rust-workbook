@@ -1,3 +1,11 @@
+---
+schema: 1
+kind: chapter
+chapter: 1
+slug: getting-started
+title: "Getting Started"
+---
+
 # Chapter 1 — Getting Started
 
 ## Book alignment
@@ -9,6 +17,12 @@ Study [Getting Started](https://rust-book.cs.brown.edu/ch01-00-getting-started.h
 - Verify and update the Rust toolchain.
 - Compile a single file with `rustc` and run its binary.
 - Create, check, build, run, and format a Cargo package.
+
+<!-- challenge
+id: "01.1"
+title: "Toolchain health report"
+status: "not-started"
+-->
 
 ## Challenge 01.1 — Toolchain health report
 
@@ -22,6 +36,14 @@ Create a program that prints a short development-environment report, then build 
 - Record the installed `rustc` and `cargo` versions outside the program.
 - Explain the source file and binary produced by `rustc`.
 - Run `cargo check`, `cargo build`, and `cargo run` and explain their different roles.
+
+### Expected function and `main.rs` flow
+
+```rust
+fn report() -> String;
+```
+
+`report` returns exactly `Rust Workbook\nEnvironment ready`. `main` calls `report` and prints the returned string. Toolchain versions belong in your exercise notes, not in `report` or its output.
 
 ### Expected output
 
@@ -42,6 +64,14 @@ Environment ready
 ### Done when
 
 You can reproduce the program through both workflows and explain why Cargo is preferred as projects grow.
+
+<!-- /challenge -->
+
+<!-- challenge
+id: "01.2"
+title: "Cargo greeting card"
+status: "not-started"
+-->
 
 ## Challenge 01.2 — Cargo greeting card
 
@@ -64,6 +94,14 @@ Welcome, Rustacean!
 - Run `cargo fmt --check` and `cargo check`.
 - Inspect `Cargo.toml` and identify the package name, version, and edition.
 
+### Expected function and `main.rs` flow
+
+```rust
+fn greeting_card() -> String;
+```
+
+`greeting_card` returns the complete three-line card. `main` prints it once. This keeps formatting independently testable while `main.rs` remains the executable entry point.
+
 ### Verification checklist
 
 - Verify a formatting helper returns exactly three lines.
@@ -76,3 +114,5 @@ Welcome, Rustacean!
 ### Done when
 
 The package follows Cargo conventions and can be built from a clean checkout with one Cargo command.
+
+<!-- /challenge -->

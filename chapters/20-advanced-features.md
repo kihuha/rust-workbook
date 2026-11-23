@@ -1,3 +1,11 @@
+---
+schema: 1
+kind: chapter
+chapter: 20
+slug: advanced-features
+title: "Advanced Features"
+---
+
 # Chapter 20 — Advanced Features
 
 ## Book alignment
@@ -10,6 +18,12 @@ Study [Advanced Features](https://rust-book.cs.brown.edu/ch20-00-advanced-featur
 - Use associated types, fully qualified syntax, supertraits, and newtypes.
 - Choose type aliases, function pointers, closures, or macros intentionally.
 - State safety invariants explicitly.
+
+<!-- challenge
+id: "20.1"
+title: "Safe split wrapper over unsafe code"
+status: "not-started"
+-->
 
 ## Challenge 20.1 — Safe split wrapper over unsafe code
 
@@ -24,6 +38,17 @@ Recreate the behavior of splitting one mutable slice into two disjoint mutable s
 - Keep the `unsafe` block as small as possible.
 - Document why the two returned slices cannot overlap.
 - Compare the implementation with the standard library method.
+
+### Expected function and example flow
+
+```rust
+fn split_at_mut_checked<T>(
+    slice: &mut [T],
+    mid: usize,
+) -> Result<(&mut [T], &mut [T]), SplitError>;
+```
+
+`main` creates one mutable vector, calls `split_at_mut_checked`, mutates one element through each returned slice, lets those borrows end, then prints the original vector. Bounds validation occurs before the `unsafe` block.
 
 ### Example
 
@@ -52,6 +77,14 @@ after mutation: [10, 2, 30, 4]
 
 The safety comment states all invariants required by each unsafe operation and callers need no unsafe code.
 
+<!-- /challenge -->
+
+<!-- challenge
+id: "20.2"
+title: "Extensible numeric wrapper and macro"
+status: "not-started"
+-->
+
 ## Challenge 20.2 — Extensible numeric wrapper and macro
 
 ### Brief
@@ -65,6 +98,17 @@ Build a newtype for millimetres, implement useful advanced traits, and add a sma
 - Implement `Display` through a supertrait-based reporting trait.
 - Use fully qualified syntax where method names are ambiguous.
 - Define `mm![10, 20, 30]` to construct `Vec<Millimeters>`.
+
+### Expected interface and `main.rs` flow
+
+```rust
+impl std::ops::Add<Meters> for Millimeters {
+    type Output = Result<Millimeters, ConversionError>;
+    fn add(self, rhs: Meters) -> Self::Output;
+}
+```
+
+`main` adds `Millimeters(500)` and `Meters(2)`, handles possible conversion overflow, formats the result through the reporting trait, then constructs and prints `mm![10, 20, 30]`. Unit conversion belongs in the trait implementation, not in `main` or the macro.
 
 ### Example
 
@@ -90,3 +134,5 @@ mm![10, 20, 30] -> [Millimeters(10), Millimeters(20), Millimeters(30)]
 ### Done when
 
 Each advanced feature solves a stated type-safety or API problem rather than adding abstraction for its own sake.
+
+<!-- /challenge -->

@@ -1,3 +1,11 @@
+---
+schema: 1
+kind: chapter
+chapter: 6
+slug: enums-and-pattern-matching
+title: "Enums and Pattern Matching"
+---
+
 # Chapter 6 — Enums and Pattern Matching
 
 ## Book alignment
@@ -11,6 +19,12 @@ Study [Enums and Pattern Matching](https://rust-book.cs.brown.edu/ch06-00-enums.
 - Use `Option<T>` instead of sentinel values.
 - Predict when matching borrows or moves owned fields.
 
+<!-- challenge
+id: "06.1"
+title: "Payment processor"
+status: "not-started"
+-->
+
 ## Challenge 06.1 — Payment processor
 
 ### Brief
@@ -23,6 +37,15 @@ Model several payment methods and produce an authorization result without boolea
 - Define result variants for approved, declined, and invalid details.
 - Use exhaustive `match` expressions.
 - Carry relevant data, such as a receipt code or decline reason, in variants.
+
+### Expected functions and `main.rs` flow
+
+```rust
+fn authorize(payment: PaymentMethod) -> AuthorizationResult;
+fn format_result(result: &AuthorizationResult) -> String;
+```
+
+`main` constructs each example `PaymentMethod`, passes ownership to `authorize`, then borrows the returned result for `format_result` and prints the message. `authorize` contains the exhaustive payment match; `format_result` contains the exhaustive result match.
 
 ### Example
 
@@ -47,6 +70,14 @@ message: Approved 2500 cents with receipt MM-2500
 
 Impossible combinations cannot be constructed through unrelated booleans or optional fields.
 
+<!-- /challenge -->
+
+<!-- challenge
+id: "06.2"
+title: "Ownership Inventory: support ticket routing"
+status: "not-started"
+-->
+
 ## Challenge 06.2 — Ownership Inventory: support ticket routing
 
 ### Brief
@@ -59,6 +90,16 @@ Process tickets whose enum variants contain owned strings. Compare matching by v
 - Write one function that borrows a ticket to produce a route.
 - Write one function that mutably borrows and normalizes open-ticket text.
 - Write one function that consumes a ticket to archive its owned text.
+
+### Expected functions and `main.rs` flow
+
+```rust
+fn route(ticket: &Ticket) -> &'static str;
+fn normalize(ticket: &mut Ticket);
+fn archive_text(ticket: Ticket) -> String;
+```
+
+`main` creates one mutable ticket, calls `route(&ticket)`, calls `normalize(&mut ticket)`, then passes the ticket by value to `archive_text`. The call order demonstrates shared borrowing, mutable borrowing, then ownership transfer.
 
 ### Example
 
@@ -83,3 +124,5 @@ archive text: crash on save
 ### Done when
 
 You can explain the ownership permissions created by each match style before compiling.
+
+<!-- /challenge -->
